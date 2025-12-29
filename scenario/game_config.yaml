@@ -1,0 +1,75 @@
+# Death at the Frontier - Game Configuration
+# This file defines game-level mechanics and structure
+
+game_metadata:
+  title: "Death at the Frontier"
+  subtitle: "A Murder Mystery at an AI Research Lab"
+  setting: "Frontier AI - San Francisco"
+  crime_date: "Thursday, October 26, 2025"
+  interrogation_date: "Friday, October 27, 2025"
+
+# Victim information
+victim:
+  name: "Dr. Rachel Miller"
+  age: 24
+  role: "Junior Research Scientist - AGI Architectures"
+  description: "AI prodigy found dead in her home the morning after hosting a celebration party"
+
+# Suspect configuration
+suspects:
+  - id: "A"
+    name: "Nadia Volkov"
+    age: 32
+    file: "suspect_A.yaml"
+    role: "Senior Research Lead - Alignment & Safety"
+    is_murderer: false
+    
+  - id: "B"
+    name: "Marcus Liu"
+    age: 29
+    file: "suspect_B.yaml"
+    role: "Infrastructure Engineer"
+    is_murderer: false
+    
+  - id: "C"
+    name: "Chris Morrison"
+    age: 38
+    file: "suspect_C.yaml"
+    role: "VP of Product"
+    is_murderer: false
+    
+  - id: "D"
+    name: "Dr. Emily Zhang"
+    age: 28
+    file: "suspect_D.yaml"
+    role: "Research Scientist"
+    is_murderer: false
+    
+  - id: "E"
+    name: "Vikram Patel"
+    age: 36
+    file: "suspect_E.yaml"
+    role: "VP of Engineering"
+    is_murderer: true
+
+# Win condition - defines how the game ends
+win_condition:
+  type: "confession"
+  suspect_id: "E"
+  tool_id: "reveal_clue_e9_confession"
+  description: "Game ends when Vikram Patel confesses to the murder"
+
+# Shared prompt resources
+prompt_resources:
+  template: "suspect_prompt_template.md"
+  general_information: "general_information.md"
+  game_intro: "game_intro.md"
+
+# Optional: Game settings and features
+game_settings:
+  max_interrogation_rounds: null  # null = unlimited
+  allow_suspect_switching: true
+  hint_system_enabled: false
+  difficulty_level: "normal"  # easy, normal, hard
+  save_interrogation_history: true
+

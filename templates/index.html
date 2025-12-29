@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Death at the Frontier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen active">
+        <div class="welcome-container">
+            <h1>Death at the Frontier</h1>
+            <div id="intro-text" class="intro-text">
+                Loading...
+            </div>
+            <button id="start-btn" class="btn-primary">Begin Investigation</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <div class="game-container">
+            <!-- Left Panel: Suspects -->
+            <div class="suspects-panel">
+                <h2>Suspects</h2>
+                <div id="suspects-list" class="suspects-list">
+                    <!-- Suspect portraits will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Center Panel: Chat -->
+            <div class="chat-panel">
+                <div class="chat-header">
+                    <h2 id="current-suspect-name">Select a suspect</h2>
+                </div>
+                <div id="chat-messages" class="chat-messages">
+                    <div class="system-message">Select a suspect to begin interrogation.</div>
+                </div>
+                <div class="chat-input-container">
+                    <input 
+                        type="text" 
+                        id="chat-input" 
+                        placeholder="Type your question..."
+                        disabled
+                    >
+                    <button id="send-btn" class="btn-send" disabled>Send</button>
+                </div>
+                
+                <!-- Loading Indicator (inside chat panel) -->
+                <div id="loading-indicator" class="loading-indicator">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Clues -->
+            <div class="clues-panel">
+                <h2>Evidence & Clues</h2>
+                <div id="clues-list" class="clues-list">
+                    <div class="no-clues">No clues discovered yet.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+            <h2>Case Closed</h2>
+            <p id="game-over-message"></p>
+            <button id="restart-btn" class="btn-primary">New Investigation</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
+

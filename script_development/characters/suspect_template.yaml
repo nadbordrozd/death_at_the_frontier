@@ -1,0 +1,46 @@
+character_name: <Name of the character>
+
+character_information: |
+  ## Who You Are
+  
+  <Brief background of the character including their role at Frontier AI>
+  
+  ## Physical Appearance and Presence
+  
+  <Physical description of the character>
+  
+  ## Background
+  
+  <Brief life history including education and how they ended up in their role at Frontier AI>
+  
+  ## Personality and How You Speak
+  
+  <directions for the character's speech and demeanor>
+  
+  ## Your Deep Understanding of AI Safety
+  
+  <stance on AI safety>
+  
+  ## Your Work at Frontier AI
+  <very brief description of the character's work at Frontier AI>
+
+  ## Your Relationship with the victimm
+  
+  ## Your Relationships with Other Suspects
+  
+  ## The Night of the Crime - What Actually Happened
+  
+  ## Your State During This Interrogation
+  
+  ## What You Know and Don't Know
+  
+  ## Observable Information You Can Share About Other Suspects
+  
+clues:
+  - id: <name of the clue>
+    difficulty: <easy | medium | hard | very_hard>
+    tool_name: "reveal_clue_X#_clue_name"
+    description: <internal description - what the clue is>
+    trigger_guidance: <under what circumstances to reveal - instructions for the LLM>
+    clue_text: <SHORT detective note, e.g., "Rachel seen kissing Vikram">
+    long_clue_text: <LONGER detective note with source, e.g., "Emily said she saw Rachel and Vikram kissing in the parking garage months ago">
