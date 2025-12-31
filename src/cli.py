@@ -5,7 +5,6 @@ Provides terminal-based UI for player interaction.
 """
 
 import os
-from typing import Optional
 from .game_engine import GameEngine
 
 
@@ -82,13 +81,15 @@ class CLI:
             self.running = False
         elif choice == 'c':
             self.show_all_clues()
-        elif choice in ['1', '2', '3', '4', '5']:
-            # Map number to suspect ID (A, B, C, D, E)
-            suspect_id = chr(ord('A') + int(choice) - 1)
-            self.engine.start_interrogation(suspect_id)
         else:
+            suspect_id = self._choice_to_suspect(choice)
+            if suspect_id:
+                self.engine.start_interrogation(suspect_id)
+                return
+
             print("\nInvalid command.")
             input("Press Enter to continue...")
+            return
     
     def interrogation_loop(self, suspect_id: str) -> None:
         """
@@ -139,12 +140,13 @@ class CLI:
             self.engine.end_interrogation()
         elif choice == 'c':
             self.show_all_clues()
-        elif choice in ['1', '2', '3', '4', '5']:
-            # Switch suspect
-            new_suspect_id = chr(ord('A') + int(choice) - 1)
-            self.engine.end_interrogation()
-            self.engine.start_interrogation(new_suspect_id)
         else:
+            new_suspect_id = self._choice_to_suspect(choice)
+            if new_suspect_id:
+                self.engine.end_interrogation()
+                self.engine.start_interrogation(new_suspect_id)
+                return
+
             # Treat as a question
             print("\n" + "=" * 60)
             print("Thinking...\n")
@@ -157,6 +159,7 @@ class CLI:
             
             print("\n" + "=" * 60)
             input("\nPress Enter to continue...")
+            return
     
     def show_all_clues(self) -> None:
         """Display all discovered clues."""
@@ -189,11 +192,13 @@ class CLI:
         self.clear_screen()
         
         print("\n" + "=" * 60)
-        print("🎉 CASE SOLVED! 🎉")
+        print("*** CASE SOLVED! ***")
         print("=" * 60)
         print()
         print("You've uncovered the truth and gotten a confession!")
         print("The murderer has been brought to justice.")
+        print()
+        print(self.engine.get_outro())
         print()
         
         revealed, total = self.engine.get_clue_stats()
@@ -203,6 +208,12 @@ class CLI:
         print("=" * 60)
         print("\nThank you for playing Death at the Frontier!")
         print()
+
+    def _choice_to_suspect(self, choice: str) -> str | None:
+        """Map numeric input (1-5) to suspect ID (A-E)."""
+        if choice in ['1', '2', '3', '4', '5']:
+            return chr(ord('A') + int(choice) - 1)
+        return None
     
     def clear_screen(self) -> None:
         """Clear the terminal screen."""

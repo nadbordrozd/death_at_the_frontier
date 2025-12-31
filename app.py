@@ -15,6 +15,18 @@ games = {}
 # Default model
 DEFAULT_MODEL = os.getenv('LLM_MODEL', 'gpt-4')
 
+
+def build_suspect_payloads(game: GameEngine) -> list[dict]:
+    """Return suspect metadata formatted for the API."""
+    return [
+        {
+            'id': suspect['id'],
+            'name': suspect['name'],
+            'image': f'/static/images/portraits/{suspect["id"]}.png'
+        }
+        for suspect in game.get_suspects()
+    ]
+
 def get_game():
     """Get or create game instance for this session"""
     session_id = session.get('session_id')
@@ -50,19 +62,10 @@ def start_game():
     # Get game intro
     intro = game.get_intro()
     
-    # Get suspects list
-    suspects = []
-    for suspect in game.get_suspects():
-        suspects.append({
-            'id': suspect['id'],
-            'name': suspect['name'],
-            'image': f'/static/images/portraits/{suspect["id"]}.png'
-        })
-    
     return jsonify({
         'success': True,
         'intro': intro,
-        'suspects': suspects
+        'suspects': build_suspect_payloads(game)
     })
 
 
@@ -97,7 +100,8 @@ def chat():
         'success': True,
         'response': response,
         'clues': clues,
-        'game_over': game_over
+        'game_over': game_over,
+        'ending': game.get_outro() if game_over else None
     })
 
 
@@ -118,17 +122,9 @@ def get_suspects():
     """Get list of all suspects"""
     game = get_game()
     
-    suspects = []
-    for suspect in game.get_suspects():
-        suspects.append({
-            'id': suspect['id'],
-            'name': suspect['name'],
-            'image': f'/static/images/portraits/{suspect["id"]}.png'
-        })
-    
     return jsonify({
         'success': True,
-        'suspects': suspects
+        'suspects': build_suspect_payloads(game)
     })
 
 

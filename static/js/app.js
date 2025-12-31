@@ -3,6 +3,7 @@ let currentSuspect = null;
 let suspects = [];
 let clues = [];
 let chatHistories = {}; // Store chat history per suspect
+let gameEnded = false;
 
 // DOM Elements
 const welcomeScreen = document.getElementById('welcome-screen');
@@ -132,7 +133,7 @@ function selectSuspect(suspect) {
 }
 
 async function sendMessage() {
-    if (!currentSuspect || !chatInput.value.trim()) return;
+    if (gameEnded || !currentSuspect || !chatInput.value.trim()) return;
     
     const message = chatInput.value.trim();
     chatInput.value = '';
@@ -175,7 +176,8 @@ async function sendMessage() {
             
             // Check if game is over
             if (data.game_over) {
-                showGameOver();
+                gameEnded = true;
+                handleGameOver(data.ending);
             }
         }
     } catch (error) {
@@ -183,9 +185,11 @@ async function sendMessage() {
         addMessage('Error: Could not send message. Please try again.', 'system-message');
     } finally {
         hideLoading();
-        chatInput.disabled = false;
-        sendBtn.disabled = false;
-        chatInput.focus();
+        if (!gameEnded) {
+            chatInput.disabled = false;
+            sendBtn.disabled = false;
+            chatInput.focus();
+        }
     }
 }
 
@@ -214,7 +218,10 @@ function addMessage(text, type) {
 function addClueNotification(clue) {
     const notificationDiv = document.createElement('div');
     notificationDiv.className = 'message clue-revealed';
-    notificationDiv.textContent = '🔍 New Clue Discovered!';
+    notificationDiv.innerHTML = `
+        <div class="clue-title">New Clue Discovered</div>
+        <div class="clue-body">${marked.parse(clue)}</div>
+    `;
     chatMessages.appendChild(notificationDiv);
     
     // Scroll to bottom
@@ -224,6 +231,24 @@ function addClueNotification(clue) {
     if (currentSuspect) {
         chatHistories[currentSuspect.id] = chatMessages.innerHTML;
     }
+}
+
+function handleGameOver(endingText) {
+    // Prevent new messages immediately
+    chatInput.disabled = true;
+    sendBtn.disabled = true;
+
+    // Highlight the last suspect message
+    const suspectMessages = chatMessages.querySelectorAll('.message.suspect');
+    const lastSuspectMessage = suspectMessages[suspectMessages.length - 1];
+    if (lastSuspectMessage) {
+        lastSuspectMessage.classList.add('pulse-highlight');
+    }
+
+    // Show outro after a brief pause
+    setTimeout(() => {
+        showGameOver(endingText);
+    }, 5000);
 }
 
 function renderClues() {
@@ -244,8 +269,12 @@ function renderClues() {
     });
 }
 
-function showGameOver() {
-    gameOverMessage.textContent = 'Congratulations! The suspect has confessed. The case is solved!';
+function showGameOver(endingText) {
+    if (endingText) {
+        gameOverMessage.innerHTML = marked.parse(endingText);
+    } else {
+        gameOverMessage.textContent = 'Congratulations! The suspect has confessed. The case is solved!';
+    }
     gameOverModal.classList.add('active');
 }
 

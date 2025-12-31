@@ -45,15 +45,38 @@ class GameEngine:
         for suspect in self.config['suspects']:
             suspect_id = suspect['id']
             self.state.add_suspect(suspect_id, self.suspects_data[suspect_id])
+
+        # Map tool names to clue IDs for quick lookup
+        self.tool_name_to_clue_id = {
+            suspect_id: {
+                clue['tool_name']: clue['id']
+                for clue in suspect_data.get('clues', [])
+            }
+            for suspect_id, suspect_data in self.suspects_data.items()
+        }
         
-        # Load game intro
-        intro_path = Path(config_path).parent / self.config['prompt_resources']['game_intro']
+        # Load game intro/outro
+        resources = self.config['prompt_resources']
+        base_dir = Path(config_path).parent
+
+        intro_path = base_dir / resources['game_intro']
         with open(intro_path, encoding='utf-8') as f:
             self.game_intro = f.read()
+
+        outro_path = base_dir / resources.get('game_outro', '')
+        if outro_path.name:
+            with open(outro_path, encoding='utf-8') as f:
+                self.game_outro = f.read()
+        else:
+            self.game_outro = "Congratulations, detective. The case is closed."
     
     def get_intro(self) -> str:
         """Get the game introduction text."""
         return self.game_intro
+
+    def get_outro(self) -> str:
+        """Get the game conclusion text."""
+        return self.game_outro
     
     def get_suspects(self) -> List[dict]:
         """Get list of all suspects with their metadata."""
@@ -121,26 +144,14 @@ class GameEngine:
         self.state.add_message(suspect_id, 'assistant', response)
         
         # Process any tool calls (clue revelations)
-        newly_revealed = []
         for tool_call in tool_calls:
             tool_name = tool_call['name']
             # Extract clue ID from tool name
             clue_id = self._extract_clue_id(suspect_id, tool_name)
             if clue_id:
-                clue = self.state.reveal_clue(suspect_id, clue_id)
-                if clue:
-                    newly_revealed.append(clue)
+                self.state.reveal_clue(suspect_id, clue_id)
         
-        # Build response with clue notifications
-        full_response = response
-        if newly_revealed:
-            full_response += "\n\n" + "=" * 60
-            full_response += "\n🔍 NEW CLUE(S) DISCOVERED! 🔍\n"
-            full_response += "=" * 60 + "\n"
-            for clue in newly_revealed:
-                full_response += f"\n{clue.clue_text}\n"
-        
-        return full_response
+        return response
     
     def _build_messages(self, suspect_id: str) -> List[dict]:
         """
@@ -176,11 +187,7 @@ class GameEngine:
         Returns:
             Clue ID or None if not found
         """
-        suspect_clues = self.suspects_data[suspect_id].get('clues', [])
-        for clue in suspect_clues:
-            if clue['tool_name'] == tool_name:
-                return clue['id']
-        return None
+        return self.tool_name_to_clue_id.get(suspect_id, {}).get(tool_name)
     
     def get_revealed_clues(self) -> List:
         """Get all revealed clues."""

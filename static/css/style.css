@@ -372,6 +372,30 @@ body {
     font-weight: 600;
 }
 
+.message.clue-revealed .clue-title {
+    margin-bottom: 0.35rem;
+}
+
+.message.clue-revealed .clue-body {
+    font-weight: 400;
+}
+
+.message.pulse-highlight {
+    animation: pulse-highlight 1s ease-in-out infinite;
+}
+
+@keyframes pulse-highlight {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.6);
+    }
+    70% {
+        box-shadow: 0 0 0 12px rgba(220, 53, 69, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+    }
+}
+
 .chat-input-container {
     display: flex;
     gap: 0.5rem;

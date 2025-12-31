@@ -50,8 +50,6 @@ class LLMInterface:
             if tools:
                 kwargs["tools"] = tools
                 kwargs["tool_choice"] = "auto"
-                # Debug: print number of tools
-                print(f"[DEBUG] Sending {len(tools)} tools to API")
             
             response = litellm.completion(**kwargs)
             
@@ -60,16 +58,12 @@ class LLMInterface:
             
             # Extract tool calls if present
             tool_calls = []
-            if hasattr(message, 'tool_calls') and message.tool_calls:
-                print(f"[DEBUG] Model made {len(message.tool_calls)} tool call(s)")
+            if getattr(message, 'tool_calls', None):
                 for tool_call in message.tool_calls:
-                    print(f"[DEBUG] Tool call: {tool_call.function.name}")
                     tool_calls.append({
                         'id': tool_call.id,
                         'name': tool_call.function.name
                     })
-            else:
-                print("[DEBUG] No tool calls detected in response")
             
             return content, tool_calls
             

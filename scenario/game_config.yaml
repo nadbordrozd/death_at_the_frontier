@@ -56,7 +56,7 @@ suspects:
 win_condition:
   type: "confession"
   suspect_id: "E"
-  tool_id: "reveal_clue_e9_confession"
+  tool_id: "the_confession"
   description: "Game ends when Vikram Patel confesses to the murder"
 
 # Shared prompt resources
@@ -64,6 +64,7 @@ prompt_resources:
   template: "suspect_prompt_template.md"
   general_information: "general_information.md"
   game_intro: "game_intro.md"
+  game_outro: "game_outro.md"
 
 # Optional: Game settings and features
 game_settings:
@@ -72,4 +73,3 @@ game_settings:
   hint_system_enabled: false
   difficulty_level: "normal"  # easy, normal, hard
   save_interrogation_history: true
-
