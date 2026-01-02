@@ -1,5 +1,6 @@
 // Game State
 const ANTHROPIC_MODEL = 'claude-sonnet-4-5';
+const NOTE_TAKER_MODEL = 'claude-haiku-4-5-20251001';
 const ANTHROPIC_API_URL = 'http://127.0.0.1:8787/v1/messages';
 
 let currentSuspect = null;
@@ -11,6 +12,7 @@ let gameEnded = false;
 
 let scenarioConfig = null;
 let systemPrompts = {};
+let noteTakerPrompts = {};
 let toolsBySuspect = {};
 let toolNameToClueId = {};
 let clueById = {};
@@ -63,8 +65,10 @@ async function loadScenario() {
 
         const generalInfo = await fetchText(baseDir + resources.general_information);
         const templateText = await fetchText(baseDir + resources.template);
+        const noteTakerTemplateText = await fetchText(baseDir + resources.note_taker_template);
 
         systemPrompts = {};
+        noteTakerPrompts = {};
         toolsBySuspect = {};
         toolNameToClueId = {};
         clueById = {};
@@ -73,11 +77,16 @@ async function loadScenario() {
             const suspectData = await fetchYaml(baseDir + suspect.file);
 
             const clueInstructions = formatClueInstructions(suspectData.clues || []);
+            const noteTakerClueInstructions = formatClueChecklist(suspectData.clues || []);
             systemPrompts[suspect.id] = renderTemplate(templateText, {
                 CHARACTER_NAME: suspectData.character_name,
                 GENERAL_INFORMATION: generalInfo,
                 CHARACTER_INFORMATION: suspectData.character_information,
                 CLUE_INSTRUCTIONS: clueInstructions
+            });
+            noteTakerPrompts[suspect.id] = renderTemplate(noteTakerTemplateText, {
+                CHARACTER_NAME: suspectData.character_name,
+                CLUE_INSTRUCTIONS: noteTakerClueInstructions
             });
 
             toolsBySuspect[suspect.id] = createClueFunctions(suspectData.clues || []);
@@ -192,12 +201,18 @@ async function sendMessage() {
         if (ANTHROPIC_API_URL.includes('YOUR_WORKER_SUBDOMAIN')) {
             throw new Error('Set your Worker URL in static/js/app.js.');
         }
-        const result = await chatWithSuspect(currentSuspect.id, message);
+        const result = await generateSuspectReply(currentSuspect.id, message);
         if (result.text) {
             addMessage(result.text, 'suspect');
         }
 
-        const newClues = processToolUses(currentSuspect.id, result.toolUses);
+        let noteTakerToolUses = [];
+        try {
+            noteTakerToolUses = await runNoteTaker(currentSuspect.id, result.text);
+        } catch (error) {
+            console.error('Error running note taker:', error);
+        }
+        const newClues = processToolUses(currentSuspect.id, noteTakerToolUses);
         if (newClues.length > 0) {
             newClues.forEach((clueText) => addClueNotification(clueText));
             renderClues();
@@ -219,7 +234,7 @@ async function sendMessage() {
     }
 }
 
-async function chatWithSuspect(suspectId, userMessage) {
+async function generateSuspectReply(suspectId, userMessage) {
     const history = conversationHistories[suspectId] || [];
     const messages = history.concat([{ role: 'user', content: userMessage }]);
 
@@ -227,8 +242,7 @@ async function chatWithSuspect(suspectId, userMessage) {
         model: ANTHROPIC_MODEL,
         max_tokens: 512,
         system: systemPrompts[suspectId],
-        messages: messages,
-        tools: toolsBySuspect[suspectId]
+        messages: messages
     };
 
     const response = await fetch(ANTHROPIC_API_URL, {
@@ -252,8 +266,6 @@ async function chatWithSuspect(suspectId, userMessage) {
         .map(item => item.text)
         .join('');
 
-    const toolUses = content.filter(item => item.type === 'tool_use');
-
     // Store message history for this suspect
     if (!conversationHistories[suspectId]) {
         conversationHistories[suspectId] = [];
@@ -261,21 +273,48 @@ async function chatWithSuspect(suspectId, userMessage) {
 
     conversationHistories[suspectId].push({ role: 'user', content: userMessage });
 
-    if (toolUses.length > 0) {
-        conversationHistories[suspectId].push({ role: 'assistant', content: content });
-        conversationHistories[suspectId].push({
-            role: 'user',
-            content: toolUses.map((toolUse) => ({
-                type: 'tool_result',
-                tool_use_id: toolUse.id,
-                content: 'logged'
-            }))
-        });
-    } else {
-        conversationHistories[suspectId].push({ role: 'assistant', content: textParts });
+    conversationHistories[suspectId].push({ role: 'assistant', content: textParts });
+
+    return { text: textParts };
+}
+
+async function runNoteTaker(suspectId, suspectResponse) {
+    if (!suspectResponse || !suspectResponse.trim()) {
+        return [];
     }
 
-    return { text: textParts, toolUses: toolUses };
+    const tools = toolsBySuspect[suspectId] || [];
+    if (tools.length === 0) {
+        return [];
+    }
+
+    const payload = {
+        model: NOTE_TAKER_MODEL,
+        max_tokens: 256,
+        system: noteTakerPrompts[suspectId],
+        messages: [
+            { role: 'user', content: `Suspect response:\n${suspectResponse}` }
+        ],
+        tools: tools
+    };
+
+    const response = await fetch(ANTHROPIC_API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Note taker request failed');
+    }
+
+    const data = await response.json();
+    const content = data.content || [];
+
+    return content.filter(item => item.type === 'tool_use');
 }
 
 function processToolUses(suspectId, toolUses) {
@@ -436,7 +475,7 @@ function formatClueInstructions(clues) {
     }
 
     const lines = [];
-    lines.push('You have access to the following tools to reveal clues:\n');
+    lines.push('You have the following clues available:\n');
 
     for (const clue of clues) {
         lines.push(`### Tool: \`${clue.tool_name}\``);
@@ -445,6 +484,26 @@ function formatClueInstructions(clues) {
         lines.push(`**Description**: ${clue.description}`);
         lines.push(`\n**When to reveal**:\n${clue.trigger_guidance}`);
         lines.push(`\n**What will be added to detective's notes**:\n${clue.clue_text}\n`);
+        lines.push('---\n');
+    }
+
+    return lines.join('\n');
+}
+
+function formatClueChecklist(clues) {
+    if (!clues.length) {
+        return 'No clue tools are available for this suspect.';
+    }
+
+    const lines = [];
+    lines.push('Match the response to these tools and clue texts:\n');
+
+    for (const clue of clues) {
+        lines.push(`### Tool: \`${clue.tool_name}\``);
+        lines.push(`**Clue ID**: ${clue.id}`);
+        lines.push(`**Description**: ${clue.description}`);
+        lines.push(`**Trigger guidance**: ${clue.trigger_guidance}`);
+        lines.push(`**Clue text**: ${clue.clue_text}\n`);
         lines.push('---\n');
     }
 
