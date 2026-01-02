@@ -1,9 +1,21 @@
 // Game State
+const ANTHROPIC_MODEL = 'claude-sonnet-4-5';
+const ANTHROPIC_API_URL = 'http://127.0.0.1:8787/v1/messages';
+
 let currentSuspect = null;
 let suspects = [];
 let clues = [];
-let chatHistories = {}; // Store chat history per suspect
+let chatHistories = {}; // Store chat history per suspect (HTML)
+let conversationHistories = {}; // Store LLM message history per suspect
 let gameEnded = false;
+
+let scenarioConfig = null;
+let systemPrompts = {};
+let toolsBySuspect = {};
+let toolNameToClueId = {};
+let clueById = {};
+let gameIntro = '';
+let gameOutro = '';
 
 // DOM Elements
 const welcomeScreen = document.getElementById('welcome-screen');
@@ -23,15 +35,15 @@ const loadingIndicator = document.getElementById('loading-indicator');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    loadIntro();
     setupEventListeners();
+    loadScenario();
 });
 
 function setupEventListeners() {
     startBtn.addEventListener('click', startGame);
     sendBtn.addEventListener('click', sendMessage);
     restartBtn.addEventListener('click', restartGame);
-    
+
     chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && !sendBtn.disabled) {
             sendMessage();
@@ -39,49 +51,79 @@ function setupEventListeners() {
     });
 }
 
-// API Calls
-async function loadIntro() {
+async function loadScenario() {
     try {
-        const response = await fetch('/api/start', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
+        startBtn.disabled = true;
+        scenarioConfig = await fetchYaml('scenario/game_config.yaml');
+        const resources = scenarioConfig.prompt_resources;
+        const baseDir = 'scenario/';
+
+        gameIntro = await fetchText(baseDir + resources.game_intro);
+        gameOutro = resources.game_outro ? await fetchText(baseDir + resources.game_outro) : '';
+
+        const generalInfo = await fetchText(baseDir + resources.general_information);
+        const templateText = await fetchText(baseDir + resources.template);
+
+        systemPrompts = {};
+        toolsBySuspect = {};
+        toolNameToClueId = {};
+        clueById = {};
+
+        for (const suspect of scenarioConfig.suspects) {
+            const suspectData = await fetchYaml(baseDir + suspect.file);
+
+            const clueInstructions = formatClueInstructions(suspectData.clues || []);
+            systemPrompts[suspect.id] = renderTemplate(templateText, {
+                CHARACTER_NAME: suspectData.character_name,
+                GENERAL_INFORMATION: generalInfo,
+                CHARACTER_INFORMATION: suspectData.character_information,
+                CLUE_INSTRUCTIONS: clueInstructions
+            });
+
+            toolsBySuspect[suspect.id] = createClueFunctions(suspectData.clues || []);
+            toolNameToClueId[suspect.id] = {};
+            for (const clue of suspectData.clues || []) {
+                toolNameToClueId[suspect.id][clue.tool_name] = clue.id;
+                clueById[clue.id] = clue;
             }
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            introText.innerHTML = marked.parse(data.intro);
-            suspects = data.suspects;
         }
+
+        suspects = scenarioConfig.suspects.map((suspect) => ({
+            id: suspect.id,
+            name: suspect.name,
+            image: `static/images/portraits/${suspect.id}.png`
+        }));
+
+        introText.innerHTML = marked.parse(gameIntro);
+        startBtn.disabled = false;
     } catch (error) {
-        console.error('Error loading intro:', error);
+        console.error('Error loading scenario:', error);
         introText.textContent = 'Failed to load game. Please refresh the page.';
+        startBtn.disabled = true;
     }
 }
 
 function startGame() {
     welcomeScreen.classList.remove('active');
     gameScreen.classList.add('active');
-    
+
     // Render suspects
     renderSuspects();
 }
 
 function renderSuspects() {
     suspectsList.innerHTML = '';
-    
+
     suspects.forEach(suspect => {
         const card = document.createElement('div');
         card.className = 'suspect-card';
         card.dataset.suspectId = suspect.id;
-        
+
         card.innerHTML = `
-            <img src="${suspect.image}" alt="${suspect.name}" onerror="this.src='/static/images/portraits/placeholder.jpg'">
+            <img src="${suspect.image}" alt="${suspect.name}" onerror="this.src='static/images/portraits/placeholder.jpg'">
             <div class="suspect-name">${suspect.name}</div>
         `;
-        
+
         card.addEventListener('click', () => selectSuspect(suspect));
         suspectsList.appendChild(card);
     });
@@ -93,27 +135,27 @@ function selectSuspect(suspect) {
         chatInput.focus();
         return;
     }
-    
+
     // Save current chat history if switching suspects
     if (currentSuspect) {
         chatHistories[currentSuspect.id] = chatMessages.innerHTML;
     }
-    
+
     currentSuspect = suspect;
-    
+
     // Update UI
     document.querySelectorAll('.suspect-card').forEach(card => {
         card.classList.remove('active');
     });
-    
+
     document.querySelector(`[data-suspect-id="${suspect.id}"]`).classList.add('active');
     currentSuspectName.textContent = suspect.name;
-    
+
     // Enable chat
     chatInput.disabled = false;
     sendBtn.disabled = false;
     chatInput.focus();
-    
+
     // Restore chat history or show intro message
     if (chatHistories[suspect.id]) {
         // Restore previous conversation
@@ -134,51 +176,35 @@ function selectSuspect(suspect) {
 
 async function sendMessage() {
     if (gameEnded || !currentSuspect || !chatInput.value.trim()) return;
-    
+
     const message = chatInput.value.trim();
     chatInput.value = '';
-    
+
     // Add user message to chat
     addMessage(message, 'user');
-    
+
     // Disable input while waiting for response
     chatInput.disabled = true;
     sendBtn.disabled = true;
     showLoading();
-    
+
     try {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                suspect_id: currentSuspect.id,
-                message: message
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            // Add suspect response
-            addMessage(data.response, 'suspect');
-            
-            // Update clues if any new ones
-            if (data.clues && data.clues.length > clues.length) {
-                const newClues = data.clues.slice(clues.length);
-                newClues.forEach(clue => {
-                    addClueNotification(clue);
-                });
-                clues = data.clues;
-                renderClues();
-            }
-            
-            // Check if game is over
-            if (data.game_over) {
-                gameEnded = true;
-                handleGameOver(data.ending);
-            }
+        if (ANTHROPIC_API_URL.includes('YOUR_WORKER_SUBDOMAIN')) {
+            throw new Error('Set your Worker URL in static/js/app.js.');
+        }
+        const result = await chatWithSuspect(currentSuspect.id, message);
+        if (result.text) {
+            addMessage(result.text, 'suspect');
+        }
+
+        const newClues = processToolUses(currentSuspect.id, result.toolUses);
+        if (newClues.length > 0) {
+            newClues.forEach((clueText) => addClueNotification(clueText));
+            renderClues();
+        }
+
+        if (gameEnded) {
+            handleGameOver(gameOutro);
         }
     } catch (error) {
         console.error('Error sending message:', error);
@@ -193,22 +219,114 @@ async function sendMessage() {
     }
 }
 
+async function chatWithSuspect(suspectId, userMessage) {
+    const history = conversationHistories[suspectId] || [];
+    const messages = history.concat([{ role: 'user', content: userMessage }]);
+
+    const payload = {
+        model: ANTHROPIC_MODEL,
+        max_tokens: 512,
+        system: systemPrompts[suspectId],
+        messages: messages,
+        tools: toolsBySuspect[suspectId]
+    };
+
+    const response = await fetch(ANTHROPIC_API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'LLM request failed');
+    }
+
+    const data = await response.json();
+    const content = data.content || [];
+
+    const textParts = content
+        .filter(item => item.type === 'text')
+        .map(item => item.text)
+        .join('');
+
+    const toolUses = content.filter(item => item.type === 'tool_use');
+
+    // Store message history for this suspect
+    if (!conversationHistories[suspectId]) {
+        conversationHistories[suspectId] = [];
+    }
+
+    conversationHistories[suspectId].push({ role: 'user', content: userMessage });
+
+    if (toolUses.length > 0) {
+        conversationHistories[suspectId].push({ role: 'assistant', content: content });
+        conversationHistories[suspectId].push({
+            role: 'user',
+            content: toolUses.map((toolUse) => ({
+                type: 'tool_result',
+                tool_use_id: toolUse.id,
+                content: 'logged'
+            }))
+        });
+    } else {
+        conversationHistories[suspectId].push({ role: 'assistant', content: textParts });
+    }
+
+    return { text: textParts, toolUses: toolUses };
+}
+
+function processToolUses(suspectId, toolUses) {
+    const newClues = [];
+    for (const toolUse of toolUses) {
+        const clueId = toolNameToClueId[suspectId]?.[toolUse.name];
+        if (!clueId || hasClue(clueId)) {
+            continue;
+        }
+        const clue = clueById[clueId];
+        if (!clue) {
+            continue;
+        }
+
+        clues.push(clue.clue_text);
+        newClues.push(clue.clue_text);
+
+        if (
+            scenarioConfig.win_condition &&
+            scenarioConfig.win_condition.suspect_id === suspectId &&
+            scenarioConfig.win_condition.tool_id === clueId
+        ) {
+            gameEnded = true;
+        }
+    }
+
+    return newClues;
+}
+
+function hasClue(clueId) {
+    const clue = clueById[clueId];
+    if (!clue) return false;
+    return clues.includes(clue.clue_text);
+}
+
 function addMessage(text, type) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${type}`;
-    
+
     // Render markdown for all message types
     if (type === 'system-message') {
         messageDiv.innerHTML = text; // System messages are already formatted
     } else {
         messageDiv.innerHTML = marked.parse(text);
     }
-    
+
     chatMessages.appendChild(messageDiv);
-    
+
     // Scroll to bottom
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    
+
     // Save updated chat history
     if (currentSuspect) {
         chatHistories[currentSuspect.id] = chatMessages.innerHTML;
@@ -223,10 +341,10 @@ function addClueNotification(clue) {
         <div class="clue-body">${marked.parse(clue)}</div>
     `;
     chatMessages.appendChild(notificationDiv);
-    
+
     // Scroll to bottom
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    
+
     // Save updated chat history
     if (currentSuspect) {
         chatHistories[currentSuspect.id] = chatMessages.innerHTML;
@@ -256,14 +374,14 @@ function renderClues() {
         cluesList.innerHTML = '<div class="no-clues">No clues discovered yet.</div>';
         return;
     }
-    
+
     cluesList.innerHTML = '';
-    
-    clues.forEach((clue, index) => {
+
+    clues.forEach((clueText) => {
         const clueDiv = document.createElement('div');
         clueDiv.className = 'clue-item';
         clueDiv.innerHTML = `
-            <div class="clue-text">${marked.parse(clue)}</div>
+            <div class="clue-text">${marked.parse(clueText)}</div>
         `;
         cluesList.appendChild(clueDiv);
     });
@@ -290,11 +408,66 @@ function hideLoading() {
     loadingIndicator.classList.remove('active');
 }
 
+async function fetchText(path) {
+    const response = await fetch(path);
+    if (!response.ok) {
+        throw new Error(`Failed to load ${path}`);
+    }
+    return response.text();
+}
+
+async function fetchYaml(path) {
+    const text = await fetchText(path);
+    return window.jsyaml.load(text);
+}
+
+function renderTemplate(template, values) {
+    let output = template;
+    for (const [key, value] of Object.entries(values)) {
+        const pattern = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
+        output = output.replace(pattern, value);
+    }
+    return output;
+}
+
+function formatClueInstructions(clues) {
+    if (!clues.length) {
+        return 'You have no specific clues to reveal.';
+    }
+
+    const lines = [];
+    lines.push('You have access to the following tools to reveal clues:\n');
+
+    for (const clue of clues) {
+        lines.push(`### Tool: \`${clue.tool_name}\``);
+        lines.push(`**Clue ID**: ${clue.id}`);
+        lines.push(`**Difficulty**: ${clue.difficulty}`);
+        lines.push(`**Description**: ${clue.description}`);
+        lines.push(`\n**When to reveal**:\n${clue.trigger_guidance}`);
+        lines.push(`\n**What will be added to detective's notes**:\n${clue.clue_text}\n`);
+        lines.push('---\n');
+    }
+
+    return lines.join('\n');
+}
+
+function createClueFunctions(clues) {
+    return clues.map((clue) => ({
+        name: clue.tool_name,
+        description: `${clue.description} (Difficulty: ${clue.difficulty})`,
+        input_schema: {
+            type: 'object',
+            properties: {},
+            required: []
+        }
+    }));
+}
+
 // Markdown parser
 const marked = {
     parse: function(text) {
         if (!text) return '';
-        
+
         // Split into paragraphs first
         let html = text
             // Headers (must be at start of line)
@@ -319,13 +492,12 @@ const marked = {
             // Line breaks and paragraphs
             .replace(/\n\n/g, '</p><p>')
             .replace(/\n/g, '<br>');
-        
+
         // Wrap in paragraph if not already wrapped
         if (!html.startsWith('<h') && !html.startsWith('<p') && !html.startsWith('<ul')) {
             html = '<p>' + html + '</p>';
         }
-        
+
         return html;
     }
 };
-

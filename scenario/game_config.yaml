@@ -39,7 +39,7 @@ suspects:
     is_murderer: false
     
   - id: "D"
-    name: "Dr. Emily Zhang"
+    name: "Emily Zhang"
     age: 28
     file: "suspect_D.yaml"
     role: "Research Scientist"

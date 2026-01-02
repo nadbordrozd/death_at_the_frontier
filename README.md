@@ -20,16 +20,23 @@ The LLM has a number of tools available, corresponding to predefined clues. When
 
 One of these clue tools is marked as the final one. When it is triggered, the murderer has confessed and the game ends. A congratulations message is displayed.
 
+
+## Configuration
+
+Deploy the Cloudflare Worker in `death-at-the-frontier-proxy` and set its URL in `static/js/app.js`.
+Set the `ANTHROPIC_API_KEY` secret in the Worker using `wrangler secret put ANTHROPIC_API_KEY`.
+
+Run via any static server (GitHub Pages works out of the box).
+
 ## Project Structure
 
 The `script_development/` directory is for iterating on the plot of the game — the screenplay. It contains the plot outline, instructions for the LLM iterating on plot details, all iterations of the plot as markdown files, and descriptions of the characters. None of this is directly used in the game; it's scaffolding for building the game.
 
 The `scenario/` directory has the final version of the plot and the prompts for the LLMs playing the characters, all the clues, etc. — but no code.
 
-`src/` has all the actual code of the game but is completely agnostic regarding the plot.
+The game now runs fully client-side from `index.html`, using the files in `static/` and `scenario/`.
 
 You could change the contents of the `scenario/` directory and end up with a completely different murder mystery.
 
-`static/` and `templates/` have the usual HTML files, including images for portraits of suspects.
+`static/` has the HTML assets, including images for portraits of suspects.
 
-`app.py` is the entry point — it starts the game locally.
