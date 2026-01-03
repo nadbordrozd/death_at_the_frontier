@@ -445,14 +445,15 @@ function renderClues() {
             emptyDiv.textContent = 'No clues in this section yet.';
             sectionDiv.appendChild(emptyDiv);
         } else {
+            const list = document.createElement('ul');
+            list.className = 'clue-list';
             items.forEach((clueText) => {
-                const clueDiv = document.createElement('div');
-                clueDiv.className = 'clue-item';
-                clueDiv.innerHTML = `
-                    <div class="clue-text">${marked.parse(clueText)}</div>
-                `;
-                sectionDiv.appendChild(clueDiv);
+                const item = document.createElement('li');
+                item.className = 'clue-list-item';
+                item.innerHTML = `<div class="clue-text">${marked.parse(clueText)}</div>`;
+                list.appendChild(item);
             });
+            sectionDiv.appendChild(list);
         }
 
         cluesList.appendChild(sectionDiv);

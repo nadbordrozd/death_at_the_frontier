@@ -184,7 +184,7 @@ body::before {
 
 .game-container {
     display: grid;
-    grid-template-columns: 220px minmax(0, 1fr) 320px;
+    grid-template-columns: 220px minmax(0, 1fr) 416px;
     gap: 1rem;
     height: calc(100vh - 2rem);
     max-height: calc(100vh - 2rem);
@@ -507,8 +507,8 @@ body::before {
     border: 2px solid rgba(159, 122, 62, 0.6);
     overflow-y: auto;
     max-height: 100%;
-    width: 320px;
-    min-width: 320px;
+    width: 416px;
+    min-width: 416px;
     color: #2b2216;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
 }
@@ -532,6 +532,18 @@ body::before {
     gap: 0.6rem;
 }
 
+.clue-list {
+    list-style: disc;
+    padding-left: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.clue-list-item {
+    padding: 0.2rem 0;
+}
+
 .clue-section-title {
     font-family: var(--font-display);
     color: #6a4420;
@@ -539,15 +551,6 @@ body::before {
     font-weight: 600;
     letter-spacing: 0.02em;
     text-transform: uppercase;
-}
-
-.clue-item {
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px dashed rgba(128, 96, 62, 0.7);
-    border-radius: 8px;
-    padding: 1rem;
-    animation: slideIn 0.3s ease;
-    box-shadow: 0 4px 12px rgba(43, 34, 22, 0.15);
 }
 
 @keyframes slideIn {
@@ -561,7 +564,7 @@ body::before {
     }
 }
 
-.clue-item .clue-text {
+.clue-list-item .clue-text {
     font-family: var(--font-notes);
     font-size: 1.05rem;
     line-height: 1.6;
@@ -682,7 +685,7 @@ body::before {
 /* Responsive Design */
 @media (max-width: 1400px) {
     .game-container {
-        grid-template-columns: 200px minmax(0, 1fr) 280px;
+        grid-template-columns: 200px minmax(0, 1fr) 364px;
     }
     
     .suspects-panel {
@@ -691,14 +694,14 @@ body::before {
     }
     
     .clues-panel {
-        width: 280px;
-        min-width: 280px;
+        width: 364px;
+        min-width: 364px;
     }
 }
 
 @media (max-width: 1200px) {
     .game-container {
-        grid-template-columns: 180px minmax(0, 1fr) 260px;
+        grid-template-columns: 180px minmax(0, 1fr) 338px;
     }
     
     .suspects-panel {
@@ -708,8 +711,8 @@ body::before {
     }
     
     .clues-panel {
-        width: 260px;
-        min-width: 260px;
+        width: 338px;
+        min-width: 338px;
     }
 }
 
