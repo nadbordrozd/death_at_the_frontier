@@ -47,7 +47,7 @@ suspects:
     
   - id: "E"
     name: "Vikram Patel"
-    age: 36
+    age: 40
     file: "suspect_E.yaml"
     role: "VP of Engineering"
     is_murderer: true

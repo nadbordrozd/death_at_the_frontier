@@ -22,7 +22,7 @@ Each suspect has a YAML file containing their complete character information and
 - **`suspect_B.yaml`** - Marcus Liu, 29 (Infrastructure Engineer, witnessed Chris's lies)
 - **`suspect_C.yaml`** - Chris Morrison, 38 (VP of Product, deliberately manipulated Vikram's jealousy)
 - **`suspect_D.yaml`** - Dr. Emily Zhang, 28 (Research Scientist, sabotaged Rachel's code, lied to Vikram)
-- **`suspect_E.yaml`** - Vikram Patel, 36 (VP of Engineering, the actual murderer)
+- **`suspect_E.yaml`** - Vikram Patel, 40 (VP of Engineering, the actual murderer)
 
 Each YAML file contains:
 - `character_name`: The suspect's full name
@@ -190,4 +190,3 @@ To create an entirely different murder mystery game:
 4. Optionally customize `suspect_prompt_template.md` for different game mechanics
 
 The Python game engine requires no code changes - it's completely generic and driven by configuration.
-

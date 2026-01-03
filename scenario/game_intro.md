@@ -1,5 +1,3 @@
-# Death at the Frontier
-
 **Friday, October 27, 2024 — 6:00 PM**
 
 ---
@@ -26,7 +24,7 @@ We've brought in five people from Frontier AI for questioning. All attended the 
 - **Marcus Liu** (29) — Infrastructure Engineer  
 - **Chris Morrison** (38) — Principal Research Scientist
 - **Dr. Emily Zhang** (28) — Research Scientist
-- **Vikram Patel** (36) — VP of Engineering
+- **Vikram Patel** (40) — VP of Engineering
 
 ---
 

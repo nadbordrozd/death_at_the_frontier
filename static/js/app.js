@@ -101,6 +101,8 @@ async function loadScenario() {
         suspects = scenarioConfig.suspects.map((suspect) => ({
             id: suspect.id,
             name: suspect.name,
+            age: suspect.age,
+            role: suspect.role,
             image: `static/images/portraits/${suspect.id}.png`
         }));
         cluesBySuspect = initClueBuckets(suspects);
@@ -184,6 +186,8 @@ function selectSuspect(suspect) {
         // Initialize empty history
         chatHistories[suspect.id] = chatMessages.innerHTML;
     }
+
+    renderClues();
 }
 
 async function sendMessage() {
@@ -427,16 +431,27 @@ function renderClues() {
 
     cluesList.innerHTML = '';
 
-    const sections = suspects.map((suspect) => ({
-        id: suspect.id,
-        title: suspect.name
-    }));
-    sections.push({ id: 'misc', title: 'Miscellaneous' });
+    if (!currentSuspect) {
+        cluesList.innerHTML = '<div class="no-clues">Select a suspect to view notes.</div>';
+        return;
+    }
+
+    const sections = [{
+        id: currentSuspect.id,
+        title: currentSuspect.name,
+        bio: formatSuspectBio(currentSuspect)
+    }];
 
     sections.forEach((section) => {
         const sectionDiv = document.createElement('div');
         sectionDiv.className = 'clue-section';
         sectionDiv.innerHTML = `<div class="clue-section-title">${section.title}</div>`;
+        if (section.bio) {
+            const bioDiv = document.createElement('div');
+            bioDiv.className = 'clue-section-bio';
+            bioDiv.textContent = section.bio;
+            sectionDiv.appendChild(bioDiv);
+        }
 
         const items = cluesBySuspect[section.id] || [];
         if (items.length === 0) {
@@ -459,6 +474,44 @@ function renderClues() {
         cluesList.appendChild(sectionDiv);
     });
 }
+
+function formatSuspectBio(suspect) {
+    const parts = [];
+    if (suspect.age) {
+        parts.push(`${suspect.age}`);
+    }
+    if (suspect.role) {
+        parts.push(suspect.role);
+    }
+    if (parts.length === 0) {
+        return '';
+    }
+    return `${parts.join(' - ')}.`;
+}
+
+function revealAllCluesPreview() {
+    cluesBySuspect = initClueBuckets(suspects);
+    discoveredClueIds = new Set();
+
+    Object.values(clueById).forEach((clue) => {
+        if (!clue || !clue.id) {
+            return;
+        }
+        discoveredClueIds.add(clue.id);
+        const aboutSuspects = normalizeAboutSuspects(clue.about_suspects);
+        const targets = aboutSuspects.length ? aboutSuspects : ['misc'];
+        targets.forEach((suspectKey) => {
+            if (!cluesBySuspect[suspectKey]) {
+                cluesBySuspect[suspectKey] = [];
+            }
+            cluesBySuspect[suspectKey].push(clue.clue_text);
+        });
+    });
+
+    renderClues();
+}
+
+window.revealAllCluesPreview = revealAllCluesPreview;
 
 function initClueBuckets(suspectList) {
     const buckets = { misc: [] };

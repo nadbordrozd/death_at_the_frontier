@@ -121,7 +121,7 @@ Everyone knows the following basic facts about each other:
 - At the party: Left around 10:00 PM
 
 ### Vikram Patel
-- 36, Indian American man
+- 40, Indian American man
 - VP of Engineering
 - 4 years at Frontier AI
 - Known for: Professional, competent, manages engineering org
