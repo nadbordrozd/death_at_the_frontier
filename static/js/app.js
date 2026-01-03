@@ -34,6 +34,7 @@ const currentSuspectName = document.getElementById('current-suspect-name');
 const notesSuspectPhoto = document.getElementById('notes-suspect-photo');
 const notesSuspectName = document.getElementById('notes-suspect-name');
 const notesSuspectBio = document.getElementById('notes-suspect-bio');
+const notesResetBtn = document.getElementById('notes-reset-btn');
 const cluesList = document.getElementById('clues-list');
 const gameOverModal = document.getElementById('game-over-modal');
 const gameOverMessage = document.getElementById('game-over-message');
@@ -50,6 +51,9 @@ function setupEventListeners() {
     startBtn.addEventListener('click', startGame);
     sendBtn.addEventListener('click', sendMessage);
     restartBtn.addEventListener('click', restartGame);
+    if (notesResetBtn) {
+        notesResetBtn.addEventListener('click', resetNotesView);
+    }
 
     chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && !sendBtn.disabled) {
@@ -203,6 +207,25 @@ function selectSuspect(suspect) {
         chatHistories[suspect.id] = chatMessages.innerHTML;
     }
 
+    renderClues();
+}
+
+function resetNotesView() {
+    currentSuspect = null;
+    document.querySelectorAll('.suspect-card').forEach(card => {
+        card.classList.remove('active');
+    });
+    if (notesSuspectPhoto) {
+        notesSuspectPhoto.classList.add('is-hidden');
+        notesSuspectPhoto.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+        notesSuspectPhoto.alt = '';
+    }
+    if (notesSuspectName) {
+        notesSuspectName.textContent = '';
+    }
+    if (notesSuspectBio) {
+        notesSuspectBio.textContent = '';
+    }
     renderClues();
 }
 
