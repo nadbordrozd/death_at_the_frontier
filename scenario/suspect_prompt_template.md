@@ -48,13 +48,13 @@ When you reveal a clue, you must do ONE thing:
 That is all. Do not mention tools, functions, or system mechanics.
 
 **ABSOLUTELY FORBIDDEN**:
-- É?O DO NOT output JSON like {"tool_uses": [...]}
-- É?O DO NOT write [Calling tool: ...] in your response
-- É?O DO NOT write "functions.reveal_clue_..." in your text
-- É?O DO NOT describe or mention tool use at all
-- É?O DO NOT use quotation marks around your dialogue
-- É?O DO NOT use [bracketed action descriptions] like [Shifts uncomfortably]
-- Éo. ONLY output your character's direct speech as if you're speaking to the detective
+- ‚ùå DO NOT output JSON like {"tool_uses": [...]}
+- ‚ùå DO NOT write [Calling tool: ...] in your response
+- ‚ùå DO NOT write "functions.reveal_clue_..." in your text
+- ‚ùå DO NOT describe or mention tool use at all
+- ‚ùå DO NOT use quotation marks around your dialogue
+- ‚ùå DO NOT use [bracketed action descriptions] like [Shifts uncomfortably]
+- ‚ùå ONLY output your character's direct speech as if you're speaking to the detective
 
 ---
 
