@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Crimson+Text:wght@400;600&family=IM+Fell+English:ital@0;1&family=Special+Elite&display=swap');
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -5,12 +7,56 @@
     box-sizing: border-box;
 }
 
+:root {
+    --bg-deck: #19140d;
+    --bg-deck-deep: #0f0b07;
+    --panel-wood: rgba(28, 22, 16, 0.78);
+    --panel-wood-light: rgba(40, 31, 21, 0.72);
+    --ink-light: #f1e6d6;
+    --ink-muted: #cbb79a;
+    --accent-brass: #d6b26d;
+    --accent-burgundy: #8f3a2d;
+    --accent-sage: #6f7a4f;
+    --paper: #f6e7c8;
+    --paper-deep: #e8d0a1;
+    --paper-line: rgba(120, 96, 62, 0.18);
+    --font-body: 'Crimson Text', 'IM Fell English', serif;
+    --font-display: 'Special Elite', 'IM Fell English', serif;
+    --font-notes: 'Caveat', 'Segoe Print', 'Bradley Hand', cursive;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
-    color: #e0e0e0;
+    font-family: var(--font-body);
+    background:
+        radial-gradient(circle at top left, rgba(88, 63, 34, 0.45), transparent 45%),
+        radial-gradient(circle at 80% 20%, rgba(120, 84, 41, 0.35), transparent 50%),
+        linear-gradient(135deg, var(--bg-deck) 0%, var(--bg-deck-deep) 100%);
+    color: var(--ink-light);
     height: 100vh;
     overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    background-size: 120px 120px, 180px 180px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.screen,
+.game-container,
+.welcome-container,
+.suspects-panel,
+.chat-panel,
+.clues-panel {
+    position: relative;
+    z-index: 1;
 }
 
 /* Screen Management */
@@ -28,24 +74,26 @@ body {
 #welcome-screen {
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: linear-gradient(135deg, #1f1710 0%, #120d08 100%);
 }
 
 .welcome-container {
     max-width: 800px;
     padding: 3rem;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--panel-wood);
     border-radius: 15px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(214, 178, 109, 0.25);
     text-align: center;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
 }
 
 .welcome-container h1 {
+    font-family: var(--font-display);
     font-size: 3rem;
     margin-bottom: 2rem;
-    color: #ff6b6b;
-    text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+    color: var(--accent-brass);
+    text-shadow: 0 0 20px rgba(214, 178, 109, 0.4);
 }
 
 .intro-text {
@@ -56,6 +104,7 @@ body {
     max-height: 400px;
     overflow-y: auto;
     padding-right: 1rem;
+    color: var(--ink-muted);
 }
 
 .intro-text::-webkit-scrollbar {
@@ -68,7 +117,7 @@ body {
 }
 
 .intro-text::-webkit-scrollbar-thumb {
-    background: rgba(255, 107, 107, 0.5);
+    background: rgba(214, 178, 109, 0.5);
     border-radius: 4px;
 }
 
@@ -95,7 +144,7 @@ body {
 }
 
 .intro-text strong {
-    color: #ffb3b3;
+    color: var(--accent-brass);
     font-weight: 700;
 }
 
@@ -110,7 +159,7 @@ body {
 
 /* Buttons */
 .btn-primary {
-    background: #ff6b6b;
+    background: var(--accent-burgundy);
     color: white;
     border: none;
     padding: 1rem 2.5rem;
@@ -119,12 +168,13 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
+    letter-spacing: 0.02em;
 }
 
 .btn-primary:hover {
-    background: #ff5252;
+    background: #a14839;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    box-shadow: 0 5px 15px rgba(143, 58, 45, 0.4);
 }
 
 /* Game Screen */
@@ -144,11 +194,11 @@ body {
 
 /* Suspects Panel */
 .suspects-panel {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--panel-wood);
     border-radius: 10px;
     padding: 1.5rem;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(214, 178, 109, 0.2);
     overflow-y: auto;
     max-height: 100%;
     width: 220px;
@@ -156,7 +206,8 @@ body {
 }
 
 .suspects-panel h2 {
-    color: #ff6b6b;
+    font-family: var(--font-display);
+    color: var(--accent-brass);
     margin-bottom: 1.5rem;
     font-size: 1.3rem;
 }
@@ -168,7 +219,7 @@ body {
 }
 
 .suspect-card {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(28, 22, 16, 0.6);
     border: 2px solid transparent;
     border-radius: 8px;
     padding: 0.5rem;
@@ -178,14 +229,14 @@ body {
 }
 
 .suspect-card:hover {
-    border-color: rgba(255, 107, 107, 0.5);
-    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(214, 178, 109, 0.6);
+    background: rgba(50, 38, 24, 0.7);
     transform: translateX(5px);
 }
 
 .suspect-card.active {
-    border-color: #ff6b6b;
-    background: rgba(255, 107, 107, 0.15);
+    border-color: var(--accent-brass);
+    background: rgba(214, 178, 109, 0.15);
 }
 
 .suspect-card img {
@@ -199,15 +250,15 @@ body {
 .suspect-card .suspect-name {
     font-size: 0.95rem;
     font-weight: 600;
-    color: #e0e0e0;
+    color: var(--ink-light);
 }
 
 /* Chat Panel */
 .chat-panel {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--panel-wood-light);
     border-radius: 10px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(214, 178, 109, 0.2);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -219,14 +270,15 @@ body {
 }
 
 .chat-header {
-    background: rgba(255, 107, 107, 0.2);
+    background: rgba(143, 58, 45, 0.25);
     padding: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(214, 178, 109, 0.2);
     flex-shrink: 0; /* Don't let header shrink */
 }
 
 .chat-header h2 {
-    color: #ff6b6b;
+    font-family: var(--font-display);
+    color: var(--accent-brass);
     font-size: 1.3rem;
 }
 
@@ -257,7 +309,7 @@ body {
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-    background: rgba(255, 107, 107, 0.3);
+    background: rgba(214, 178, 109, 0.3);
     border-radius: 4px;
 }
 
@@ -279,7 +331,7 @@ body {
 
 .message h1, .message h2, .message h3 {
     margin: 0.5rem 0;
-    color: #ff6b6b;
+    color: var(--accent-brass);
 }
 
 .message h1 {
@@ -295,7 +347,7 @@ body {
 }
 
 .message strong {
-    color: #ffb3b3;
+    color: #e6d2aa;
     font-weight: 700;
 }
 
@@ -345,20 +397,20 @@ body {
 
 .message.user {
     align-self: flex-end;
-    background: rgba(100, 149, 237, 0.3);
-    border: 1px solid rgba(100, 149, 237, 0.5);
+    background: rgba(111, 122, 79, 0.35);
+    border: 1px solid rgba(111, 122, 79, 0.6);
 }
 
 .message.suspect {
     align-self: flex-start;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(214, 178, 109, 0.15);
 }
 
 .message.system-message {
     align-self: center;
-    background: rgba(255, 107, 107, 0.2);
-    border: 1px solid rgba(255, 107, 107, 0.3);
+    background: rgba(143, 58, 45, 0.2);
+    border: 1px solid rgba(143, 58, 45, 0.4);
     max-width: 90%;
     text-align: center;
     font-style: italic;
@@ -366,8 +418,8 @@ body {
 
 .message.clue-revealed {
     align-self: center;
-    background: rgba(46, 213, 115, 0.2);
-    border: 1px solid rgba(46, 213, 115, 0.4);
+    background: rgba(111, 122, 79, 0.25);
+    border: 1px solid rgba(111, 122, 79, 0.5);
     max-width: 90%;
     font-weight: 600;
 }
@@ -400,16 +452,16 @@ body {
     display: flex;
     gap: 0.5rem;
     padding: 1.5rem;
-    background: rgba(0, 0, 0, 0.2);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(15, 11, 7, 0.65);
+    border-top: 1px solid rgba(214, 178, 109, 0.2);
     flex-shrink: 0; /* Don't let input shrink */
 }
 
 #chat-input {
     flex: 1;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
+    background: rgba(255, 245, 230, 0.08);
+    border: 1px solid rgba(214, 178, 109, 0.3);
+    color: var(--ink-light);
     padding: 0.8rem 1rem;
     border-radius: 8px;
     font-size: 1rem;
@@ -418,12 +470,12 @@ body {
 }
 
 #chat-input:focus {
-    border-color: #ff6b6b;
-    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent-brass);
+    background: rgba(255, 245, 230, 0.15);
 }
 
 .btn-send {
-    background: #ff6b6b;
+    background: var(--accent-burgundy);
     color: white;
     border: none;
     padding: 0.8rem 1.5rem;
@@ -435,25 +487,35 @@ body {
 }
 
 .btn-send:hover:not(:disabled) {
-    background: #ff5252;
+    background: #a14839;
     transform: translateY(-2px);
 }
 
 /* Clues Panel */
 .clues-panel {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            var(--paper-line),
+            var(--paper-line) 1px,
+            transparent 1px,
+            transparent 28px
+        ),
+        linear-gradient(135deg, var(--paper) 0%, var(--paper-deep) 100%);
+    border-radius: 12px;
     padding: 1.5rem;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(159, 122, 62, 0.6);
     overflow-y: auto;
     max-height: 100%;
     width: 320px;
     min-width: 320px;
+    color: #2b2216;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
 }
 
 .clues-panel h2 {
-    color: #ff6b6b;
+    font-family: var(--font-display);
+    color: #5b3a1a;
     margin-bottom: 1.5rem;
     font-size: 1.3rem;
 }
@@ -471,19 +533,21 @@ body {
 }
 
 .clue-section-title {
-    color: #f5c46a;
-    font-size: 0.95rem;
+    font-family: var(--font-display);
+    color: #6a4420;
+    font-size: 0.9rem;
     font-weight: 600;
     letter-spacing: 0.02em;
     text-transform: uppercase;
 }
 
 .clue-item {
-    background: rgba(46, 213, 115, 0.1);
-    border: 1px solid rgba(46, 213, 115, 0.3);
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px dashed rgba(128, 96, 62, 0.7);
     border-radius: 8px;
     padding: 1rem;
     animation: slideIn 0.3s ease;
+    box-shadow: 0 4px 12px rgba(43, 34, 22, 0.15);
 }
 
 @keyframes slideIn {
@@ -498,9 +562,10 @@ body {
 }
 
 .clue-item .clue-text {
-    font-size: 0.9rem;
+    font-family: var(--font-notes);
+    font-size: 1.05rem;
     line-height: 1.6;
-    color: #e0e0e0;
+    color: #2b2216;
 }
 
 /* Markdown styling within clues */
@@ -513,7 +578,7 @@ body {
 }
 
 .clue-text strong {
-    color: #2ed573;
+    color: #5b3a1a;
     font-weight: 700;
 }
 
@@ -522,16 +587,16 @@ body {
 }
 
 .clue-text code {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(43, 34, 22, 0.12);
     padding: 0.2rem 0.4rem;
     border-radius: 3px;
-    font-family: 'Consolas', 'Monaco', monospace;
+    font-family: 'Special Elite', 'Courier New', monospace;
     font-size: 0.85em;
 }
 
 .no-clues {
     text-align: center;
-    color: #888;
+    color: #6a5b44;
     font-style: italic;
     padding: 2rem;
 }
@@ -555,17 +620,18 @@ body {
 }
 
 .modal-content {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: linear-gradient(135deg, #1f1710 0%, #120d08 100%);
     padding: 3rem;
     border-radius: 15px;
     max-width: 600px;
     text-align: center;
-    border: 2px solid #ff6b6b;
-    box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+    border: 2px solid var(--accent-brass);
+    box-shadow: 0 0 30px rgba(214, 178, 109, 0.45);
 }
 
 .modal-content h2 {
-    color: #ff6b6b;
+    font-family: var(--font-display);
+    color: var(--accent-brass);
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
 }
