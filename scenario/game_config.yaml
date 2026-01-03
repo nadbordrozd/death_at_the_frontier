@@ -63,6 +63,7 @@ win_condition:
 prompt_resources:
   template: "suspect_prompt_template.md"
   note_taker_template: "note_taker_prompt_template.md"
+  case_notes: "case_notes.md"
   general_information: "general_information.md"
   game_intro: "game_intro.md"
   game_outro: "game_outro.md"

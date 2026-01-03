@@ -19,6 +19,7 @@ let toolNameToClueId = {};
 let clueById = {};
 let gameIntro = '';
 let gameOutro = '';
+let caseNotes = '';
 
 // DOM Elements
 const welcomeScreen = document.getElementById('welcome-screen');
@@ -66,6 +67,7 @@ async function loadScenario() {
 
         gameIntro = await fetchText(baseDir + resources.game_intro);
         gameOutro = resources.game_outro ? await fetchText(baseDir + resources.game_outro) : '';
+        caseNotes = resources.case_notes ? await fetchText(baseDir + resources.case_notes) : '';
 
         const generalInfo = await fetchText(baseDir + resources.general_information);
         const templateText = await fetchText(baseDir + resources.template);
@@ -126,6 +128,7 @@ function startGame() {
 
     // Render suspects
     renderSuspects();
+    renderClues();
 }
 
 function renderSuspects() {
@@ -436,7 +439,17 @@ function handleGameOver(endingText) {
 
 function renderClues() {
     if (!currentSuspect) {
-        cluesList.innerHTML = '';
+        if (caseNotes && caseNotes.trim()) {
+            const summaryHtml = caseNotes
+                .split(/\r?\n/)
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map((line) => `<p>${line}</p>`)
+                .join('');
+            cluesList.innerHTML = `<div class="case-summary">${summaryHtml}</div>`;
+        } else {
+            cluesList.innerHTML = '';
+        }
         if (notesSuspectPhoto) {
             notesSuspectPhoto.classList.add('is-hidden');
         }
