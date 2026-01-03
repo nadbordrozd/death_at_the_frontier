@@ -130,6 +130,7 @@ clues:
   - id: early_departure
     difficulty: easy
     tool_name: "reveal_clue_d1_early_departure"
+    about_suspects: ["D"]
     description: Emily left the party around 10 PM, evasive about why.
     trigger_guidance: Reveal when asked about the party or when you left.
     clue_text: "Emily left party around 10 PM, evasive about reason"
@@ -138,6 +139,7 @@ clues:
   - id: toast_reaction
     difficulty: easy
     tool_name: "reveal_clue_d2_toast_reaction"
+    about_suspects: ["D"]
     description: Emily mentions Rachel's "personal changes" toast but left soon after.
     trigger_guidance: Reveal when asked about Rachel's toast or the party atmosphere.
     clue_text: "Emily left shortly after Rachel's 'big changes' toast"
@@ -146,6 +148,7 @@ clues:
   - id: no_alibi
     difficulty: medium
     tool_name: "reveal_clue_d3_no_alibi"
+    about_suspects: ["D"]
     description: Emily went home alone after the party — no witnesses.
     trigger_guidance: Reveal when pressed about what she did after leaving the party.
     clue_text: "Emily has no alibi — went home alone"
@@ -154,6 +157,7 @@ clues:
   - id: jealousy_admission
     difficulty: medium_hard
     tool_name: "reveal_clue_d4_jealousy_admission"
+    about_suspects: ["D"]
     description: Emily admits to professional jealousy toward Rachel.
     trigger_guidance: Reveal when pressed about her feelings toward Rachel or why she really left the party.
     clue_text: "Emily admits intense professional jealousy toward Rachel"
@@ -162,6 +166,7 @@ clues:
   - id: sabotage_confession
     difficulty: medium
     tool_name: "reveal_clue_d5_sabotage_confession"
+    about_suspects: ["D"]
     description: Emily confesses to sabotaging Rachel's eval code.
     trigger_guidance: Reveal when confronted with Vikram's account of catching her at Rachel's workstation, OR Nadia's/Marcus's accounts of seeing her act suspiciously, OR when pressured as a prime murder suspect.
     clue_text: "Emily sabotaged Rachel's eval code to inflate her results"
@@ -170,6 +175,7 @@ clues:
   - id: gossip_to_vikram
     difficulty: very_hard
     tool_name: "reveal_clue_d6_gossip_to_vikram"
+    about_suspects: ["D", "E", "C"]
     description: Emily told Vikram about "Chris and Rachel" to deflect from her sabotage.
     trigger_guidance: ONLY reveal after confessing to sabotage. This is the deeper secret about how Vikram caught her and what she said to deflect.
     clue_text: "Emily told Vikram that Chris and Rachel were having an affair"
@@ -178,6 +184,7 @@ clues:
   - id: chris_thats_what_you_get
     difficulty: very_hard
     tool_name: "reveal_clue_d7_chris_comment"
+    about_suspects: ["C"]
     description: Emily heard Chris say "That's what you get for taking her from me" after Vikram left.
     trigger_guidance: ONLY reveal after confessing to sabotage. This is the smoking gun about Chris's manipulation.
     clue_text: "Emily heard Chris say 'That's what you get for taking her from me'"
@@ -186,6 +193,7 @@ clues:
   - id: about_nadia_reporter
     difficulty: easy
     tool_name: "reveal_clue_d8_about_nadia"
+    about_suspects: ["A"]
     description: Emily saw Nadia meeting with a tech reporter.
     trigger_guidance: Reveal when asked about anyone acting strangely before the murder.
     clue_text: "Emily saw Nadia meeting with tech reporter from the Chronicle"
@@ -194,6 +202,7 @@ clues:
   - id: about_chris_manipulation
     difficulty: easy
     tool_name: "reveal_clue_d9_about_chris"
+    about_suspects: ["C", "E"]
     description: Chris was all over Rachel at the party, kept watching Vikram's reactions.
     trigger_guidance: Reveal when asked about Chris's behavior at the party.
     clue_text: "Chris kept glancing at Vikram; looked satisfied when Vikram left upset"
@@ -202,6 +211,7 @@ clues:
   - id: about_vikram_rachel_relationship
     difficulty: easy
     tool_name: "reveal_clue_d10_vikram_rachel"
+    about_suspects: ["E"]
     description: Emily saw Vikram and Rachel kissing in the parking garage months ago.
     trigger_guidance: Reveal when asked about Vikram, or about Rachel's personal life.
     clue_text: "Emily saw Vikram and Rachel kissing in parking garage months ago"
@@ -210,6 +220,7 @@ clues:
   - id: about_vikram_departure
     difficulty: easy
     tool_name: "reveal_clue_d11_vikram_departure"
+    about_suspects: ["E"]
     description: Vikram left the party early looking upset, not sick.
     trigger_guidance: Reveal when asked about who left early or who seemed upset.
     clue_text: "Vikram left party early (~9:30), looked upset not sick"
@@ -218,6 +229,7 @@ clues:
   - id: about_marcus_suspicious
     difficulty: easy
     tool_name: "reveal_clue_d12_about_marcus"
+    about_suspects: ["B"]
     description: Marcus seemed on edge and was seen near Rachel's office.
     trigger_guidance: Reveal when asked about anyone acting strangely.
     clue_text: "Marcus on edge, seen hanging around Rachel's office"
@@ -226,6 +238,7 @@ clues:
   - id: about_personal_changes
     difficulty: easy
     tool_name: "reveal_clue_d13_personal_changes"
+    about_suspects: ["misc"]
     description: Emily's reaction to Rachel's "personal changes" toast.
     trigger_guidance: Reveal when asked about the party or Rachel's toast.
     clue_text: "Rachel's toast mentioned 'big changes, professionally and personally'"

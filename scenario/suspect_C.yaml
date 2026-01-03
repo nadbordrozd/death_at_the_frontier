@@ -133,6 +133,7 @@ clues:
   - id: helpful_colleague
     difficulty: easy
     tool_name: "reveal_clue_c1_helpful_colleague"
+    about_suspects: ["C"]
     description: Chris warmly describes helping Rachel and working closely with her.
     trigger_guidance: Reveal when asked about your relationship with Rachel or your activities that night.
     clue_text: "Chris helped Rachel clean up, worked closely on presentation"
@@ -141,6 +142,7 @@ clues:
   - id: last_to_leave
     difficulty: easy
     tool_name: "reveal_clue_c2_last_to_leave"
+    about_suspects: ["C"]
     description: Chris stayed until 11 PM, later than everyone else.
     trigger_guidance: Reveal when asked about timeline or when you left the party.
     clue_text: "Chris was last guest to leave at 11 PM"
@@ -149,6 +151,7 @@ clues:
   - id: relationship_details
     difficulty: medium
     tool_name: "reveal_clue_c3_relationship_details"
+    about_suspects: ["C"]
     description: Chris knows surprising details about Rachel's home and habits.
     trigger_guidance: Reveal when asked about Rachel's personal life or when demonstrating how close you were.
     clue_text: "Chris knows intimate details about Rachel's home and habits"
@@ -157,6 +160,7 @@ clues:
   - id: denial_of_affair
     difficulty: medium
     tool_name: "reveal_clue_c4_denial_of_affair"
+    about_suspects: ["C"]
     description: Chris vehemently denies having an affair with Rachel.
     trigger_guidance: Reveal when directly asked if you and Rachel were romantically involved.
     clue_text: "Chris vehemently denies affair with Rachel"
@@ -165,6 +169,7 @@ clues:
   - id: manipulation_confronted
     difficulty: hard
     tool_name: "reveal_clue_c5_manipulation_confronted"
+    about_suspects: ["C"]
     description: When confronted with evidence of lies and deliberate behavior, Chris begins to crack.
     trigger_guidance: Only reveal when confronted with Marcus's account of the dinner lie AND/OR Emily's observations about watching Vikram's reactions. Show distress but try to deflect.
     clue_text: "Chris confronted with evidence of lies; shows distress"
@@ -173,6 +178,7 @@ clues:
   - id: manipulation_confession
     difficulty: very_hard
     tool_name: "reveal_clue_c6_manipulation_confession"
+    about_suspects: ["C", "E"]
     description: Chris confesses to deliberately manipulating Vikram's jealousy.
     trigger_guidance: ONLY reveal when confronted with Emily's account of the "That's what you get" comment AND the pattern of lies. This is the breaking point confession.
     clue_text: "Chris confesses to deliberate manipulation campaign against Vikram"
@@ -181,6 +187,7 @@ clues:
   - id: knew_about_relationship
     difficulty: very_hard
     tool_name: "reveal_clue_c7_knew_relationship"
+    about_suspects: ["C", "E"]
     description: Chris reveals he knew about Vikram and Rachel's secret relationship.
     trigger_guidance: Only reveal as part of or after the manipulation confession.
     clue_text: "Chris knew about Vikram and Rachel's secret relationship"
@@ -189,6 +196,7 @@ clues:
   - id: about_emily_departure
     difficulty: easy
     tool_name: "reveal_clue_c8_about_emily"
+    about_suspects: ["D"]
     description: Emily left abruptly after Rachel's toast, seemed bothered.
     trigger_guidance: Reveal when asked about the party or who might have been upset.
     clue_text: "Emily left abruptly after Rachel's toast, seemed resentful"
@@ -197,6 +205,7 @@ clues:
   - id: about_emily_tension
     difficulty: easy
     tool_name: "reveal_clue_c9_about_emily_tension"
+    about_suspects: ["D"]
     description: Emily seemed tense and almost angry at the party.
     trigger_guidance: Reveal when asked about who seemed upset at the party.
     clue_text: "Emily seemed tense, almost angry during Rachel's toast"
@@ -205,6 +214,7 @@ clues:
   - id: about_nadia_report
     difficulty: easy
     tool_name: "reveal_clue_c10_about_nadia"
+    about_suspects: ["A"]
     description: Rachel was planning to report Nadia to the board for something serious.
     trigger_guidance: Reveal when asked about Rachel's state of mind or any concerns she had.
     clue_text: "Rachel was planning to report Nadia to the board"
@@ -213,6 +223,7 @@ clues:
   - id: about_marcus_suspicious
     difficulty: easy
     tool_name: "reveal_clue_c11_about_marcus"
+    about_suspects: ["B"]
     description: Marcus was distracted and seen near Rachel's home office.
     trigger_guidance: Reveal when asked about who seemed out of place at the party.
     clue_text: "Marcus distracted at party, seen near Rachel's home office"
@@ -221,6 +232,7 @@ clues:
   - id: about_vikram_departure
     difficulty: easy
     tool_name: "reveal_clue_c12_about_vikram"
+    about_suspects: ["E"]
     description: Vikram left early looking agitated, barely acknowledged Rachel.
     trigger_guidance: Reveal when asked about who left early or who seemed upset.
     clue_text: "Vikram left early (~9:30), agitated, barely looked at Rachel"
@@ -229,6 +241,7 @@ clues:
   - id: about_personal_changes
     difficulty: easy
     tool_name: "reveal_clue_c13_personal_changes"
+    about_suspects: ["misc"]
     description: Chris's interpretation of Rachel's "personal changes" comment.
     trigger_guidance: Reveal when asked about Rachel's toast or the party.
     clue_text: "Rachel's toast mentioned 'big changes, professionally and personally'"

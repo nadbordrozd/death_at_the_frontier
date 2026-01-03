@@ -127,6 +127,7 @@ clues:
   - id: safety_crusader
     difficulty: easy
     tool_name: "reveal_clue_a1_safety_crusader"
+    about_suspects: ["A"]
     description: Nadia's deep concerns about AI safety and her belief that Rachel's work was dangerous.
     trigger_guidance: Reveal when asked about Rachel's work, your relationship with Rachel, or your views on AI development.
     clue_text: "Nadia had serious concerns about Rachel's research"
@@ -135,6 +136,7 @@ clues:
   - id: leaking_campaign
     difficulty: hard
     tool_name: "reveal_clue_a2_leaking_campaign"
+    about_suspects: ["A"]
     description: Nadia has been secretly leaking Frontier AI's research to journalists and regulators.
     trigger_guidance: Only reveal when confronted with evidence from other suspects (Chris mentioning Rachel was going to report someone, Emily seeing you with a reporter, Vikram knowing about the leaked documents) OR when pressed repeatedly about your conflict with Rachel.
     clue_text: "Nadia was leaking company secrets to journalists and regulators"
@@ -143,6 +145,7 @@ clues:
   - id: nadia_motive
     difficulty: medium
     tool_name: "reveal_clue_a3_motive"
+    about_suspects: ["A"]
     description: Once the leaking is revealed, Nadia becomes a prime suspect with clear motive.
     trigger_guidance: This emerges naturally after the leaking is revealed. Don't explicitly state "I had motive" but acknowledge that Rachel was about to destroy your career and mission.
     clue_text: "Nadia had clear motive — Rachel was about to destroy her career"
@@ -151,6 +154,7 @@ clues:
   - id: what_nadia_saw
     difficulty: very_hard
     tool_name: "reveal_clue_a4_what_she_saw"
+    about_suspects: ["A", "E", "B"]
     description: Nadia returned to the house around 12:10 AM and saw Vikram's car and another person (Marcus).
     trigger_guidance: ONLY reveal this after you've been cornered about the leaking and are desperate to deflect suspicion. This is your defensive move when you feel you're about to be arrested. Present it as proof that someone else was there.
     clue_text: "Nadia returned to the house ~12:10 AM; saw Vikram's car and another man"
@@ -159,6 +163,7 @@ clues:
   - id: about_emily_suspicious
     difficulty: easy
     tool_name: "reveal_clue_a5_about_emily"
+    about_suspects: ["D"]
     description: Observable information about Emily's suspicious behavior around Rachel's project.
     trigger_guidance: Reveal when asked about office dynamics, who might have had issues with Rachel, or about Emily specifically.
     clue_text: "Emily seen in server room late at night; made snide comments about Rachel's results"
@@ -167,6 +172,7 @@ clues:
   - id: about_chris_relationship
     difficulty: easy
     tool_name: "reveal_clue_a6_about_chris"
+    about_suspects: ["C"]
     description: Observable information about Chris's close relationship with Rachel.
     trigger_guidance: Reveal when asked about Rachel's relationships or who was close to her.
     clue_text: "Nadia suspects Chris and Rachel were having an affair"
@@ -175,6 +181,7 @@ clues:
   - id: about_marcus_questions
     difficulty: easy
     tool_name: "reveal_clue_a7_about_marcus"
+    about_suspects: ["B"]
     description: Observable information about Marcus asking strange technical questions.
     trigger_guidance: Reveal when asked about anyone acting strangely before the murder.
     clue_text: "Marcus asked suspicious technical questions about Rachel's work"
@@ -183,6 +190,7 @@ clues:
   - id: about_vikram_early_departure
     difficulty: easy
     tool_name: "reveal_clue_a8_about_vikram"
+    about_suspects: ["E"]
     description: Observable information about Vikram leaving the party early and looking upset.
     trigger_guidance: Reveal when asked about who left early or who seemed off at the party.
     clue_text: "Vikram left party early (~9:30 PM), looked upset not sick"
@@ -191,6 +199,7 @@ clues:
   - id: about_personal_changes
     difficulty: easy
     tool_name: "reveal_clue_a9_personal_changes"
+    about_suspects: ["misc"]
     description: Nadia's interpretation of Rachel's "personal changes" comment.
     trigger_guidance: Reveal when asked about the party or Rachel's toast.
     clue_text: "Rachel's toast mentioned 'big changes, professionally and personally'"

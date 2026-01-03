@@ -149,6 +149,7 @@ clues:
   - id: early_departure
     difficulty: easy
     tool_name: "reveal_clue_e1_early_departure"
+    about_suspects: ["E"]
     description: Vikram left the party around 9:30 PM, seemed upset.
     trigger_guidance: Reveal when asked about the party or when you left.
     clue_text: "Vikram left party early (~9:30 PM), claimed headache"
@@ -157,6 +158,7 @@ clues:
   - id: emily_sabotage_freely_given
     difficulty: easy
     tool_name: "reveal_clue_e2_emily_sabotage"
+    about_suspects: ["D"]
     description: Vikram freely reveals he caught Emily sabotaging Rachel's code.
     trigger_guidance: Reveal when asked about tensions at work, about Emily, or about Rachel's colleagues.
     clue_text: "Vikram caught Emily sabotaging Rachel's eval code"
@@ -165,6 +167,7 @@ clues:
   - id: distracted_by_something
     difficulty: medium
     tool_name: "reveal_clue_e3_distracted"
+    about_suspects: ["D"]
     description: Vikram admits Emily told him something disturbing that made him forget about the sabotage.
     trigger_guidance: Reveal when pressed about what Emily told him, or why he didn't report the sabotage.
     clue_text: "Emily told Vikram something disturbing that distracted him from sabotage"
@@ -173,6 +176,7 @@ clues:
   - id: secret_relationship
     difficulty: medium
     tool_name: "reveal_clue_e4_relationship"
+    about_suspects: ["E"]
     description: Vikram admits he was in a secret relationship with Rachel.
     trigger_guidance: Reveal when pressed about his relationship with Rachel, confronted with Emily's account of seeing them kiss, or when accused of being jealous of Chris.
     clue_text: "Vikram was in secret relationship with Rachel for 8 months"
@@ -181,6 +185,7 @@ clues:
   - id: jealousy_of_chris
     difficulty: medium
     tool_name: "reveal_clue_e5_jealousy"
+    about_suspects: ["E", "C"]
     description: Vikram admits Chris's behavior made him jealous and suspicious.
     trigger_guidance: Reveal when asked about Chris, or after admitting the relationship with Rachel.
     clue_text: "Vikram was jealous of Chris's attention to Rachel"
@@ -189,6 +194,7 @@ clues:
   - id: emily_told_affair_lie
     difficulty: hard
     tool_name: "reveal_clue_e6_emily_lie"
+    about_suspects: ["D", "C"]
     description: Vikram reveals Emily told him Rachel and Chris were having an affair.
     trigger_guidance: Reveal when pressed about what Emily told him, after admitting the relationship.
     clue_text: "Emily told Vikram that Rachel and Chris were having affair"
@@ -197,6 +203,7 @@ clues:
   - id: returned_to_house
     difficulty: hard
     tool_name: "reveal_clue_e7_returned"
+    about_suspects: ["E"]
     description: Vikram admits he returned to Rachel's house after the party.
     trigger_guidance: Only reveal when confronted with evidence he was there (if any exists), or when his story about going home falls apart under pressure.
     clue_text: "Vikram returned to Rachel's house around 1 AM"
@@ -205,6 +212,7 @@ clues:
   - id: the_argument
     difficulty: very_hard
     tool_name: "reveal_clue_e8_argument"
+    about_suspects: ["E"]
     description: Vikram describes the argument with Rachel about Chris.
     trigger_guidance: Only reveal after admitting he returned to the house. This is the lead-up to confession.
     clue_text: "Vikram confronted Rachel about Chris; they argued"
@@ -213,6 +221,7 @@ clues:
   - id: the_confession
     difficulty: very_hard
     tool_name: "reveal_clue_e9_confession"
+    about_suspects: ["E"]
     description: Vikram confesses to killing Rachel.
     trigger_guidance: ONLY reveal after describing the argument, when the detective presses for what happened next. This is the final confession. If the detective has NOT yet proven Chris's manipulation, Vikram confesses but still believes Rachel betrayed him. If the detective HAS proven Chris's manipulation, include his realization that Rachel was innocent.
     clue_text: "Vikram confesses to killing Rachel in a rage"
@@ -221,6 +230,7 @@ clues:
   - id: realization_of_manipulation
     difficulty: very_hard
     tool_name: "reveal_clue_e10_manipulation_realized"
+    about_suspects: ["E", "C"]
     description: If confronted with proof of Chris's manipulation, Vikram realizes he was played and Rachel was innocent.
     trigger_guidance: Reveal if the detective presents evidence of Chris's deliberate manipulation (e.g., Emily's account of "That's what you get for taking her from me"). This devastating realization will likely trigger confession if it hasn't happened yet.
     clue_text: "Vikram realizes Chris deliberately manipulated him; Rachel was innocent"
@@ -229,6 +239,7 @@ clues:
   - id: about_chris_behavior
     difficulty: easy
     tool_name: "reveal_clue_e11_about_chris"
+    about_suspects: ["C"]
     description: Vikram describes Chris's overly attentive behavior toward Rachel.
     trigger_guidance: Reveal when asked about Chris or about the party dynamics.
     clue_text: "Vikram noticed Chris was 'too attentive' to Rachel"
@@ -237,6 +248,7 @@ clues:
   - id: about_emily_jealousy
     difficulty: easy
     tool_name: "reveal_clue_e12_about_emily"
+    about_suspects: ["D"]
     description: Vikram notes Emily's obvious jealousy of Rachel.
     trigger_guidance: Reveal when asked about Emily or workplace dynamics.
     clue_text: "Vikram noticed Emily was obviously jealous of Rachel"
@@ -245,6 +257,7 @@ clues:
   - id: about_personal_changes
     difficulty: easy
     tool_name: "reveal_clue_e13_personal_changes"
+    about_suspects: ["E"]
     description: Vikram's reaction to Rachel's "personal changes" toast.
     trigger_guidance: Reveal when asked about the party or Rachel's toast.
     clue_text: "Rachel's toast about 'personal changes' upset Vikram"

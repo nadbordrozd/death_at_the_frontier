@@ -5,7 +5,8 @@ const ANTHROPIC_API_URL = 'http://127.0.0.1:8787/v1/messages';
 
 let currentSuspect = null;
 let suspects = [];
-let clues = [];
+let cluesBySuspect = {};
+let discoveredClueIds = new Set();
 let chatHistories = {}; // Store chat history per suspect (HTML)
 let conversationHistories = {}; // Store LLM message history per suspect
 let gameEnded = false;
@@ -102,6 +103,8 @@ async function loadScenario() {
             name: suspect.name,
             image: `static/images/portraits/${suspect.id}.png`
         }));
+        cluesBySuspect = initClueBuckets(suspects);
+        discoveredClueIds = new Set();
 
         introText.innerHTML = marked.parse(gameIntro);
         startBtn.disabled = false;
@@ -329,7 +332,15 @@ function processToolUses(suspectId, toolUses) {
             continue;
         }
 
-        clues.push(clue.clue_text);
+        discoveredClueIds.add(clueId);
+        const aboutSuspects = normalizeAboutSuspects(clue.about_suspects);
+        const targets = aboutSuspects.length ? aboutSuspects : ['misc'];
+        targets.forEach((suspectKey) => {
+            if (!cluesBySuspect[suspectKey]) {
+                cluesBySuspect[suspectKey] = [];
+            }
+            cluesBySuspect[suspectKey].push(clue.clue_text);
+        });
         newClues.push(clue.clue_text);
 
         if (
@@ -345,9 +356,7 @@ function processToolUses(suspectId, toolUses) {
 }
 
 function hasClue(clueId) {
-    const clue = clueById[clueId];
-    if (!clue) return false;
-    return clues.includes(clue.clue_text);
+    return discoveredClueIds.has(clueId);
 }
 
 function addMessage(text, type) {
@@ -409,21 +418,71 @@ function handleGameOver(endingText) {
 }
 
 function renderClues() {
-    if (clues.length === 0) {
+    const totalClues = Object.values(cluesBySuspect)
+        .reduce((sum, bucket) => sum + bucket.length, 0);
+    if (totalClues === 0) {
         cluesList.innerHTML = '<div class="no-clues">No clues discovered yet.</div>';
         return;
     }
 
     cluesList.innerHTML = '';
 
-    clues.forEach((clueText) => {
-        const clueDiv = document.createElement('div');
-        clueDiv.className = 'clue-item';
-        clueDiv.innerHTML = `
-            <div class="clue-text">${marked.parse(clueText)}</div>
-        `;
-        cluesList.appendChild(clueDiv);
+    const sections = suspects.map((suspect) => ({
+        id: suspect.id,
+        title: suspect.name
+    }));
+    sections.push({ id: 'misc', title: 'Miscellaneous' });
+
+    sections.forEach((section) => {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'clue-section';
+        sectionDiv.innerHTML = `<div class="clue-section-title">${section.title}</div>`;
+
+        const items = cluesBySuspect[section.id] || [];
+        if (items.length === 0) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'no-clues';
+            emptyDiv.textContent = 'No clues in this section yet.';
+            sectionDiv.appendChild(emptyDiv);
+        } else {
+            items.forEach((clueText) => {
+                const clueDiv = document.createElement('div');
+                clueDiv.className = 'clue-item';
+                clueDiv.innerHTML = `
+                    <div class="clue-text">${marked.parse(clueText)}</div>
+                `;
+                sectionDiv.appendChild(clueDiv);
+            });
+        }
+
+        cluesList.appendChild(sectionDiv);
     });
+}
+
+function initClueBuckets(suspectList) {
+    const buckets = { misc: [] };
+    suspectList.forEach((suspect) => {
+        buckets[suspect.id] = [];
+    });
+    return buckets;
+}
+
+function normalizeAboutSuspects(value) {
+    if (Array.isArray(value)) {
+        return value.map((item) => String(item).trim()).filter(Boolean);
+    }
+    if (typeof value === 'string') {
+        const trimmed = value.trim();
+        if (!trimmed) {
+            return [];
+        }
+        const cleaned = trimmed.replace(/^\[/, '').replace(/\]$/, '');
+        return cleaned
+            .split(',')
+            .map((item) => item.replace(/^['"]|['"]$/g, '').trim())
+            .filter(Boolean);
+    }
+    return [];
 }
 
 function showGameOver(endingText) {
@@ -448,7 +507,7 @@ function hideLoading() {
 }
 
 async function fetchText(path) {
-    const response = await fetch(path);
+    const response = await fetch(path, { cache: 'no-store' });
     if (!response.ok) {
         throw new Error(`Failed to load ${path}`);
     }
