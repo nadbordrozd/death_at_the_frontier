@@ -527,6 +527,12 @@ body::before {
     margin-bottom: 1.5rem;
 }
 
+.notes-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
 .notes-header h2 {
     margin-bottom: 0;
 }
@@ -538,6 +544,16 @@ body::before {
     border-radius: 8px;
     border: 2px solid rgba(159, 122, 62, 0.6);
     box-shadow: 0 6px 14px rgba(43, 34, 22, 0.2);
+}
+
+.notes-suspect-photo.is-hidden {
+    display: none;
+}
+
+.notes-suspect-bio {
+    font-family: var(--font-notes);
+    font-size: 1.225rem;
+    color: #3e2d1c;
 }
 
 .clues-list {

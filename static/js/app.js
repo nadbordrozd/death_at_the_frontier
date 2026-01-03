@@ -31,6 +31,8 @@ const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
 const currentSuspectName = document.getElementById('current-suspect-name');
 const notesSuspectPhoto = document.getElementById('notes-suspect-photo');
+const notesSuspectName = document.getElementById('notes-suspect-name');
+const notesSuspectBio = document.getElementById('notes-suspect-bio');
 const cluesList = document.getElementById('clues-list');
 const gameOverModal = document.getElementById('game-over-modal');
 const gameOverMessage = document.getElementById('game-over-message');
@@ -167,6 +169,13 @@ function selectSuspect(suspect) {
     if (notesSuspectPhoto) {
         notesSuspectPhoto.src = suspect.image;
         notesSuspectPhoto.alt = suspect.name;
+        notesSuspectPhoto.classList.remove('is-hidden');
+    }
+    if (notesSuspectName) {
+        notesSuspectName.textContent = suspect.name;
+    }
+    if (notesSuspectBio) {
+        notesSuspectBio.textContent = formatSuspectBio(suspect);
     }
 
     // Enable chat
@@ -426,57 +435,36 @@ function handleGameOver(endingText) {
 }
 
 function renderClues() {
-    const totalClues = Object.values(cluesBySuspect)
-        .reduce((sum, bucket) => sum + bucket.length, 0);
-    if (totalClues === 0) {
-        cluesList.innerHTML = '<div class="no-clues">No clues discovered yet.</div>';
+    if (!currentSuspect) {
+        cluesList.innerHTML = '';
+        if (notesSuspectPhoto) {
+            notesSuspectPhoto.classList.add('is-hidden');
+        }
+        if (notesSuspectName) {
+            notesSuspectName.textContent = '';
+        }
+        if (notesSuspectBio) {
+            notesSuspectBio.textContent = '';
+        }
+        return;
+    }
+
+    const items = cluesBySuspect[currentSuspect.id] || [];
+    if (items.length === 0) {
+        cluesList.innerHTML = '';
         return;
     }
 
     cluesList.innerHTML = '';
-
-    if (!currentSuspect) {
-        cluesList.innerHTML = '<div class="no-clues">Select a suspect to view notes.</div>';
-        return;
-    }
-
-    const sections = [{
-        id: currentSuspect.id,
-        title: currentSuspect.name,
-        bio: formatSuspectBio(currentSuspect)
-    }];
-
-    sections.forEach((section) => {
-        const sectionDiv = document.createElement('div');
-        sectionDiv.className = 'clue-section';
-        sectionDiv.innerHTML = `<div class="clue-section-title">${section.title}</div>`;
-        if (section.bio) {
-            const bioDiv = document.createElement('div');
-            bioDiv.className = 'clue-section-bio';
-            bioDiv.textContent = section.bio;
-            sectionDiv.appendChild(bioDiv);
-        }
-
-        const items = cluesBySuspect[section.id] || [];
-        if (items.length === 0) {
-            const emptyDiv = document.createElement('div');
-            emptyDiv.className = 'no-clues';
-            emptyDiv.textContent = 'No clues in this section yet.';
-            sectionDiv.appendChild(emptyDiv);
-        } else {
-            const list = document.createElement('ul');
-            list.className = 'clue-list';
-            items.forEach((clueText) => {
-                const item = document.createElement('li');
-                item.className = 'clue-list-item';
-                item.innerHTML = `<div class="clue-text">${marked.parse(clueText)}</div>`;
-                list.appendChild(item);
-            });
-            sectionDiv.appendChild(list);
-        }
-
-        cluesList.appendChild(sectionDiv);
+    const list = document.createElement('ul');
+    list.className = 'clue-list';
+    items.forEach((clueText) => {
+        const item = document.createElement('li');
+        item.className = 'clue-list-item';
+        item.innerHTML = `<div class="clue-text">${marked.parse(clueText)}</div>`;
+        list.appendChild(item);
     });
+    cluesList.appendChild(list);
 }
 
 function formatSuspectBio(suspect) {
