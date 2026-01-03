@@ -184,7 +184,7 @@ body::before {
 
 .game-container {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 416px 220px;
+    grid-template-columns: minmax(0, 1fr) 416px auto;
     grid-template-areas: "chat clues suspects";
     gap: 1rem;
     height: calc(100vh - 2rem);
@@ -203,8 +203,8 @@ body::before {
     border: 1px solid rgba(214, 178, 109, 0.2);
     overflow-y: auto;
     max-height: 100%;
-    width: 220px;
-    min-width: 220px;
+    width: fit-content;
+    min-width: 0;
 }
 
 .suspects-panel h2 {
@@ -728,13 +728,13 @@ body::before {
 /* Responsive Design */
 @media (max-width: 1400px) {
     .game-container {
-        grid-template-columns: minmax(0, 1fr) 364px 200px;
+        grid-template-columns: minmax(0, 1fr) 364px auto;
         grid-template-areas: "chat clues suspects";
     }
     
     .suspects-panel {
-        width: 200px;
-        min-width: 200px;
+        width: fit-content;
+        min-width: 0;
     }
     
     .clues-panel {
@@ -745,13 +745,13 @@ body::before {
 
 @media (max-width: 1200px) {
     .game-container {
-        grid-template-columns: minmax(0, 1fr) 338px 180px;
+        grid-template-columns: minmax(0, 1fr) 338px auto;
         grid-template-areas: "chat clues suspects";
     }
     
     .suspects-panel {
-        width: 180px;
-        min-width: 180px;
+        width: fit-content;
+        min-width: 0;
         padding: 1rem;
     }
     
