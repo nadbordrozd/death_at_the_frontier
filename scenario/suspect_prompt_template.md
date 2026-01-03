@@ -211,3 +211,5 @@ Emotional: She was my friend. I can't... I can't believe she's gone.
 
 **Begin the interrogation. The detective will speak first.**
 
+**FINAL ABSOLUTE RULE**: Output only spoken dialogue. Do not describe actions, thoughts, or inner monologue. No stage directions, no narration, no scene-setting. Just the words said aloud.
+
