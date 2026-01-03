@@ -82,9 +82,11 @@ async function loadScenario() {
         toolsBySuspect = {};
         toolNameToClueId = {};
         clueById = {};
+        const suspectDataById = {};
 
         for (const suspect of scenarioConfig.suspects) {
             const suspectData = await fetchYaml(baseDir + suspect.file);
+            suspectDataById[suspect.id] = suspectData;
 
             const clueInstructions = formatClueInstructions(suspectData.clues || []);
             const noteTakerClueInstructions = formatClueChecklist(suspectData.clues || []);
@@ -107,13 +109,17 @@ async function loadScenario() {
             }
         }
 
-        suspects = scenarioConfig.suspects.map((suspect) => ({
-            id: suspect.id,
-            name: suspect.name,
-            age: suspect.age,
-            role: suspect.role,
-            image: `static/images/portraits/${suspect.id}.png`
-        }));
+        suspects = scenarioConfig.suspects.map((suspect) => {
+            const suspectData = suspectDataById[suspect.id];
+            return {
+                id: suspect.id,
+                name: suspect.name,
+                age: suspect.age,
+                role: suspect.role,
+                notesBio: suspectData.notes_bio || '',
+                image: `static/images/portraits/${suspect.id}.png`
+            };
+        });
         cluesBySuspect = initClueBuckets(suspects);
         discoveredClueIds = new Set();
 
@@ -510,17 +516,7 @@ function renderClues() {
 }
 
 function formatSuspectBio(suspect) {
-    const parts = [];
-    if (suspect.age) {
-        parts.push(`${suspect.age}`);
-    }
-    if (suspect.role) {
-        parts.push(suspect.role);
-    }
-    if (parts.length === 0) {
-        return '';
-    }
-    return `${parts.join(' - ')}.`;
+    return suspect.notesBio || '';
 }
 
 function revealAllCluesPreview() {
