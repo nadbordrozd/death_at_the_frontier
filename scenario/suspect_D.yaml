@@ -145,15 +145,6 @@ clues:
     clue_text: "Emily left shortly after Rachel's 'big changes' toast"
     long_clue_text: "Emily mentioned Rachel's toast about 'big changes coming, professionally and personally.' She admitted she left 'pretty soon after that,' claiming she'd had a long day. She seemed uncomfortable discussing the toast."
 
-  - id: no_alibi
-    difficulty: medium
-    tool_name: "reveal_clue_d3_no_alibi"
-    about_suspects: ["D"]
-    description: Emily went home alone after the party — no witnesses.
-    trigger_guidance: Reveal when pressed about what she did after leaving the party.
-    clue_text: "Emily has no alibi — went home alone"
-    long_clue_text: "When pressed about what she did after leaving the party, Emily said she went straight home. She lives alone. No roommate, no witnesses. She became defensive when asked for specifics: 'I went home. That's it. What do you want from me?'"
-
   - id: jealousy_admission
     difficulty: medium_hard
     tool_name: "reveal_clue_d4_jealousy_admission"

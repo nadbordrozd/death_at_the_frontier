@@ -30,6 +30,7 @@ const chatMessages = document.getElementById('chat-messages');
 const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
 const currentSuspectName = document.getElementById('current-suspect-name');
+const notesSuspectPhoto = document.getElementById('notes-suspect-photo');
 const cluesList = document.getElementById('clues-list');
 const gameOverModal = document.getElementById('game-over-modal');
 const gameOverMessage = document.getElementById('game-over-message');
@@ -134,8 +135,7 @@ function renderSuspects() {
         card.dataset.suspectId = suspect.id;
 
         card.innerHTML = `
-            <img src="${suspect.image}" alt="${suspect.name}" onerror="this.src='static/images/portraits/placeholder.jpg'">
-            <div class="suspect-name">${suspect.name}</div>
+            <img src="${suspect.image}" alt="${suspect.name}" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='">
         `;
 
         card.addEventListener('click', () => selectSuspect(suspect));
@@ -164,6 +164,10 @@ function selectSuspect(suspect) {
 
     document.querySelector(`[data-suspect-id="${suspect.id}"]`).classList.add('active');
     currentSuspectName.textContent = suspect.name;
+    if (notesSuspectPhoto) {
+        notesSuspectPhoto.src = suspect.image;
+        notesSuspectPhoto.alt = suspect.name;
+    }
 
     // Enable chat
     chatInput.disabled = false;

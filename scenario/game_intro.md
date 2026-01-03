@@ -28,7 +28,7 @@ We've brought in five people from Frontier AI for questioning. All attended the 
 
 ---
 
-One of them is a killer.
+One of them is the murderer, and everyone else present at the party has an alibi.
 
 Find out who.
 

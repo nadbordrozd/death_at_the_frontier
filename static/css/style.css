@@ -217,7 +217,7 @@ body::before {
 .suspects-list {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.4rem;
 }
 
 .suspect-card {
@@ -242,18 +242,14 @@ body::before {
 }
 
 .suspect-card img {
-    width: 120px;
-    height: 180px;
+    width: 90px;
+    height: 135px;
     object-fit: cover;
     border-radius: 6px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
 }
 
-.suspect-card .suspect-name {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--ink-light);
-}
+/* Suspect name removed from card UI */
 
 /* Chat Panel */
 .chat-panel {
@@ -524,6 +520,26 @@ body::before {
     font-size: 1.3rem;
 }
 
+.notes-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.notes-header h2 {
+    margin-bottom: 0;
+}
+
+.notes-suspect-photo {
+    width: 150px;
+    height: 225px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid rgba(159, 122, 62, 0.6);
+    box-shadow: 0 6px 14px rgba(43, 34, 22, 0.2);
+}
+
 .clues-list {
     display: flex;
     flex-direction: column;
@@ -751,8 +767,8 @@ body::before {
     }
     
     .suspect-card img {
-        width: 80px;
-        height: 120px;
+        width: 90px;
+        height: 135px;
     }
     
     .clues-panel {
