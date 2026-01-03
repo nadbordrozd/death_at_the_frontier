@@ -473,6 +473,9 @@ function renderClues() {
         } else {
             cluesList.innerHTML = '';
         }
+        if (notesResetBtn) {
+            notesResetBtn.classList.add('is-hidden');
+        }
         if (notesSuspectPhoto) {
             notesSuspectPhoto.classList.add('is-hidden');
         }
@@ -485,6 +488,9 @@ function renderClues() {
         return;
     }
 
+    if (notesResetBtn) {
+        notesResetBtn.classList.remove('is-hidden');
+    }
     const items = cluesBySuspect[currentSuspect.id] || [];
     if (items.length === 0) {
         cluesList.innerHTML = '';

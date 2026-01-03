@@ -557,8 +557,8 @@ body::before {
 }
 
 .btn-notes-reset {
-    width: 100%;
-    margin-top: 1.2rem;
+    width: calc(100% - 2.4rem);
+    margin: 0 1.2rem 1.2rem;
     padding: 0.7rem 1rem;
     border-radius: 8px;
     border: 1px solid rgba(159, 122, 62, 0.6);
@@ -568,11 +568,17 @@ body::before {
     font-size: 0.95rem;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: sticky;
+    bottom: 1.2rem;
 }
 
 .btn-notes-reset:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 10px rgba(43, 34, 22, 0.2);
+}
+
+.btn-notes-reset.is-hidden {
+    display: none;
 }
 
 .case-summary {
