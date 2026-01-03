@@ -1,7 +1,7 @@
 // Game State
 const ANTHROPIC_MODEL = 'claude-sonnet-4-5';
 const NOTE_TAKER_MODEL = 'claude-haiku-4-5-20251001';
-const ANTHROPIC_API_URL = 'http://127.0.0.1:8787/v1/messages';
+const ANTHROPIC_API_URL = 'https://death-at-the-frontier-proxy.nadbordrozd.workers.dev/v1/messages';
 
 let currentSuspect = null;
 let suspects = [];
